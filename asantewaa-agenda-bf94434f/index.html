@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fbf6f0">
+<title>Asantewaa Hair · Agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23fbf6f0'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='Georgia,serif' font-weight='600' fill='%23a8543a'>A</text></svg>">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-linha">
+    <a class="marca" href="#" data-ir="inicio"><b>Asantewaa</b><i>Hair</i></a>
+    <nav>
+      <button data-tela="inicio" class="on">Início</button>
+      <button data-tela="agenda">Agenda</button>
+      <button data-tela="clientes">Clientes</button>
+      <button data-tela="conta">Contabilidade</button>
+      <button data-tela="servicos">Serviços</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ═══════════ INÍCIO ═══════════ -->
+  <section id="tela-inicio">
+    <div class="capa entra">
+      <span class="selo">Painel do salão</span>
+      <h1>Bom dia,<br><em>Asantewaa Hair</em></h1>
+      <p id="capa-frase">Sua agenda, suas clientes e seu dinheiro num lugar só.</p>
+      <div class="linha-bt">
+        <button class="bt" data-ir="agenda">Ver a agenda de hoje <span class="bolinha">→</span></button>
+        <button class="bt clara so-texto" id="ini-marcar">Marcar horário</button>
+      </div>
+    </div>
+
+    <div class="bento entra">
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Hoje</span><span class="val" id="i-hoje">0</span>
+        <span class="nota" id="i-hoje-n">nenhuma cliente marcada</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Previsto hoje</span><span class="val marca" id="i-valor">R$ 0</span>
+        <span class="nota" id="i-horas">0 de cadeira</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Últimos 30 dias</span><span class="val" id="i-mes">R$ 0</span>
+        <span class="nota" id="i-mes-n">0 procedimentos</span></div></div>
+    </div>
+
+    <div class="tit entra"><h2>O que precisa de você</h2>
+      <p>A lista muda sozinha conforme o dia anda.</p></div>
+    <div class="bento entra">
+      <div class="cel g casca"><div class="nucleo">
+        <span class="selo">Hora do retoque</span>
+        <div id="i-retoque" style="margin-top:12px"></div>
+      </div></div>
+      <div class="cel g casca"><div class="nucleo">
+        <span class="selo">Próximos dias</span>
+        <div id="i-proximos" style="margin-top:12px"></div>
+      </div></div>
+    </div>
+
+    <div class="tit entra"><h2>Ir direto para</h2></div>
+    <div class="bento entra">
+      <div class="cel"><button class="atalho" data-ir="agenda">
+        <span class="ico">🗓</span><span class="txt"><b>Agenda</b>
+        <span>Por dia, semana ou mês</span></span><span class="seta">→</span></button></div>
+      <div class="cel"><button class="atalho" data-ir="clientes">
+        <span class="ico">👝</span><span class="txt"><b>Clientes</b>
+        <span id="a-cli">Ficha e mensagens</span></span><span class="seta">→</span></button></div>
+      <div class="cel"><button class="atalho" data-ir="conta">
+        <span class="ico">📈</span><span class="txt"><b>Contabilidade</b>
+        <span>Entradas, ticket e faltas</span></span><span class="seta">→</span></button></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ AGENDA ═══════════ -->
+  <section id="tela-agenda" hidden>
+    <div class="ctrl">
+      <div class="setas"><button id="ant" aria-label="anterior">‹</button>
+        <button id="prox" aria-label="próximo">›</button></div>
+      <div class="periodo"><span id="per-tit">—</span><small id="per-sub">—</small></div>
+      <div class="abas-mini">
+        <button data-v="dia" class="on">Dia</button>
+        <button data-v="semana">Semana</button>
+        <button data-v="mes">Mês</button>
+      </div>
+      <button class="bt clara so-texto" id="ir-hoje">Hoje</button>
+      <button class="bt" id="novo-ag">Marcar <span class="bolinha">+</span></button>
+    </div>
+    <div class="bento" style="margin-bottom:18px">
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Agendamentos</span><span class="val" id="ag-qtd">0</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Previsto</span><span class="val marca" id="ag-valor">R$ 0</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Cadeira ocupada</span><span class="val" id="ag-horas">0h</span></div></div>
+    </div>
+    <div id="vista"></div>
+  </section>
+
+  <!-- ═══════════ CLIENTES ═══════════ -->
+  <section id="tela-clientes" hidden>
+    <div class="tit"><h2>Clientes</h2>
+      <p>Quem está na hora de voltar aparece primeiro.</p></div>
+    <div class="busca" style="margin-bottom:14px">
+      <input id="busca-cli" type="search" placeholder="Buscar por nome ou telefone…"></div>
+    <div id="filtros-cli" style="margin-bottom:14px">
+      <button class="pino on" data-f="todos">Todas</button>
+      <button class="pino" data-f="retoque">Hora do retoque</button>
+      <button class="pino" data-f="sumidos">Sumidas há 60+ dias</button>
+      <button class="pino" data-f="novos">Novas</button>
+    </div>
+    <div class="casca"><div class="nucleo" id="lista-clientes"></div></div>
+  </section>
+
+  <!-- ═══════════ CONTABILIDADE ═══════════ -->
+  <section id="tela-conta" hidden>
+    <div class="tit"><h2>Contabilidade</h2>
+      <p>O que entrou, quanto rende cada hora sua e o que as faltas custaram.</p></div>
+    <div id="filtros-per" style="margin-bottom:16px">
+      <button class="pino" data-p="dia">Hoje</button>
+      <button class="pino" data-p="semana">Esta semana</button>
+      <button class="pino" data-p="mes">Este mês</button>
+      <button class="pino on" data-p="30d">Últimos 30 dias</button>
+    </div>
+    <div class="bento" style="margin-bottom:20px">
+      <div class="cel gg casca"><div class="nucleo metr">
+        <span class="rot">Entrou no período</span>
+        <span class="val marca" id="c-fat">R$ 0</span>
+        <span class="nota" id="c-fat-n">0 procedimentos concluídos</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Ticket médio</span><span class="val" id="c-ticket">R$ 0</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Por hora sua</span><span class="val" id="c-hora">R$ 0</span>
+        <span class="nota" id="c-horas">0 trabalhadas</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Clientes novas</span><span class="val" id="c-novas">0</span></div></div>
+      <div class="cel casca"><div class="nucleo metr">
+        <span class="rot">Faltas</span><span class="val" id="c-faltas">0</span>
+        <span class="nota" id="c-perdido">R$ 0 que deixaram de entrar</span></div></div>
+    </div>
+    <div class="tit"><h2>O que mais dá dinheiro</h2></div>
+    <div class="casca"><div class="nucleo" id="c-ranking"></div></div>
+    <div class="tit"><h2>De onde vieram</h2></div>
+    <div class="casca"><div class="nucleo" id="c-origens"></div></div>
+  </section>
+
+  <!-- ═══════════ SERVIÇOS ═══════════ -->
+  <section id="tela-servicos" hidden>
+    <div class="tit"><h2>Serviços</h2>
+      <p>O tempo de cada procedimento é o que impede duas clientes no mesmo horário.</p></div>
+    <button class="bt" id="novo-serv" style="margin-bottom:16px">Novo serviço <span class="bolinha">+</span></button>
+    <div class="casca"><div class="nucleo" id="lista-servicos"></div></div>
+  </section>
+</main>
+
+<div class="veu" id="modal" hidden><div class="painel" id="modal-corpo"></div></div>
+<script src="app.js"></script>
+</body>
+</html>

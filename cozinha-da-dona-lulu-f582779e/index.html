@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#fbf6f0">
+<title>Cozinha Da Dona Lulu, restaurante em Plano Piloto</title>
+<meta name="description" content="Cozinha Da Dona Lulu, restaurante em Plano Piloto. Agende pelo WhatsApp.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cozinha Da Dona Lulu">
+<meta property="og:description" content="Restaurante em Plano Piloto. Agende pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fundo: #fbf6f0;
+    --papel: #ffffff;
+    --tinta: #221a16;
+    --fraco: #7c6a5f;
+    --realce: #a8543a;
+    --sobre-realce: #ffffff;
+    --fio: rgba(34,26,22,.11);
+    --banda: #211914;
+    --sobre-banda: #f8f1ea;
+    --fraco-banda: #a49389;
+    --luz: rgba(255,255,255,.9);
+    --sombra-cor: 60,40,30;
+    --ouro: #f0b23c;
+    --display: 'Fraunces', Georgia, serif;
+    --peso: 600;
+    --tracking: -0.022em;
+    --curva: cubic-bezier(.32,.72,0,1);
+    --sombra: 0 1px 2px rgba(60,40,30,.04), 0 18px 40px -22px rgba(60,40,30,.22), 0 50px 90px -60px rgba(60,40,30,.3);
+  }
+
+  *,*::before,*::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--fundo);
+    color: var(--tinta);
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  ol, ul { margin: 0; padding: 0; list-style: none; }
+  :focus-visible { outline: 2px solid var(--realce); outline-offset: 3px; border-radius: 8px; }
+
+  /* Grão de filme: fixo e sem captura de clique, para não repintar no scroll. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    opacity: .032;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: var(--peso);
+    letter-spacing: var(--tracking);
+    line-height: 1.03;
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+
+  .faixa { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+  .medida { max-width: 58ch; }
+
+  /* ---- barra de honestidade ---------------------------------------------
+     Some do caminho do olho mas não do texto. Tipografia pequena, fundo de
+     contraste, a palavra Prévia como etiqueta. Parece nota de editor, e não
+     alerta de navegador. */
+  .aviso {
+    position: relative;
+    z-index: 6;
+    background: var(--banda);
+    color: var(--fraco-banda);
+    font-size: 11.5px;
+    line-height: 1.45;
+    letter-spacing: .005em;
+    padding: 8px 14px;
+    text-align: center;
+  }
+  .aviso b { color: var(--sobre-banda); font-weight: 600; }
+  .aviso .marca-aviso {
+    display: inline-block;
+    margin-right: 7px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sobre-banda) 14%, transparent);
+    color: var(--sobre-banda);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+  }
+
+  /* ---- botões ------------------------------------------------------------ */
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 8px 8px 8px 24px;
+    border-radius: 999px;
+    background: var(--realce);
+    color: var(--sobre-realce);
+    font-weight: 600;
+    font-size: 15.5px;
+    letter-spacing: -.008em;
+    border: 0;
+    cursor: pointer;
+    box-shadow: 0 12px 30px -14px color-mix(in srgb, var(--realce) 90%, transparent);
+    transition: transform .55s var(--curva), filter .55s var(--curva), box-shadow .55s var(--curva);
+  }
+  .botao:hover { filter: brightness(1.06); box-shadow: 0 20px 40px -16px color-mix(in srgb, var(--realce) 90%, transparent); }
+  .botao:active { transform: scale(.976); }
+  .botao.miudo { min-height: 42px; padding: 5px 5px 5px 17px; font-size: 13.5px; gap: 8px; }
+  .botao.largo { width: 100%; }
+
+  /* Ícone dentro do próprio disco, encostado na borda interna do botão. */
+  .bolha {
+    width: 38px; height: 38px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    flex: none;
+    background: color-mix(in srgb, var(--sobre-realce) 18%, transparent);
+    transition: transform .55s var(--curva);
+  }
+  .botao.miudo .bolha { width: 32px; height: 32px; }
+  .botao:hover .bolha { transform: translate(2px,-1px) scale(1.06); }
+  .bolha svg { display: block; }
+
+  .botao.fantasma {
+    background: transparent;
+    color: var(--tinta);
+    border: 1px solid var(--fio);
+    box-shadow: none;
+  }
+  .botao.fantasma .bolha { background: color-mix(in srgb, var(--tinta) 8%, transparent); }
+  .botao.fantasma:hover { background: color-mix(in srgb, var(--tinta) 4%, transparent); filter: none; box-shadow: none; }
+
+  .botao.claro { background: var(--sobre-banda); color: var(--banda); box-shadow: none; }
+  .botao.claro .bolha { background: color-mix(in srgb, var(--banda) 16%, transparent); }
+
+  /* ---- dupla moldura -----------------------------------------------------
+     Concha externa com fio de cabelo e um núcleo de raio menor dentro. É o que
+     tira o ar de div solta e dá a sensação de peça montada. */
+  .molde {
+    padding: 6px;
+    border-radius: 28px;
+    background: color-mix(in srgb, var(--tinta) 4%, var(--papel));
+    border: 1px solid var(--fio);
+    box-shadow: var(--sombra);
+  }
+  .nucleo {
+    border-radius: 22px;
+    background: var(--papel);
+    box-shadow: inset 0 1px 0 var(--luz);
+    overflow: hidden;
+  }
+
+  .etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 18px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--fio);
+    background: color-mix(in srgb, var(--tinta) 3%, transparent);
+    color: var(--fraco);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+  }
+  .etiqueta::before {
+    content: "";
+    width: 5px; height: 5px;
+    border-radius: 999px;
+    background: var(--realce);
+    flex: none;
+  }
+
+  /* ---- navegação --------------------------------------------------------- */
+  .nav {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    width: max-content;
+    max-width: calc(100% - 28px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 6px 6px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.28);
+    background: rgba(255,255,255,.13);
+    backdrop-filter: blur(20px) saturate(1.4);
+    color: #fff;
+  }
+  .nav-marca { display: flex; align-items: center; gap: 9px; min-width: 0; }
+  .sigla {
+    width: 30px; height: 30px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    flex: none;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.22);
+    font-family: var(--display);
+    font-weight: var(--peso);
+    font-size: 12.5px;
+    letter-spacing: 0;
+  }
+  .nav b {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 38vw;
+  }
+  .nav .botao { background: #fff; color: #12100e; box-shadow: none; }
+  .nav .botao .bolha { background: rgba(0,0,0,.08); }
+
+  /* ---- hero --------------------------------------------------------------
+     Celular: foto sangrada na dobra inteira, véu em quatro paradas e o texto
+     apoiado embaixo. Desktop: a foto vira coluna da direita sangrando na borda
+     da tela, o texto volta para o papel do tema e uma segunda foto invade a
+     coluna de texto. A mesma marcação serve às duas, só muda o CSS. */
+  .heroi {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: min(80dvh, 660px);
+    padding: 104px 0 42px;
+    border-radius: 0 0 34px 34px;
+    background: var(--fundo);
+  }
+  .heroi-arte { position: absolute; inset: 0; z-index: 0; }
+  .quadro-a { position: absolute; inset: 0; overflow: hidden; }
+  .foto-a {
+    width: 100%; height: 100%;
+    display: block;
+    object-fit: cover;
+    animation: aproxima 1.9s var(--curva) both;
+  }
+  @keyframes aproxima { from { transform: scale(1.08); } to { transform: none; } }
+  .heroi-arte::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+      rgba(6,6,7,.66) 0%, rgba(6,6,7,.14) 30%, rgba(6,6,7,.70) 72%, rgba(6,6,7,.94) 100%);
+  }
+  .quadro-b, .chip-nota { display: none; }
+  .heroi-grade { position: relative; z-index: 2; }
+  .heroi-texto { color: #fff; }
+  .heroi .etiqueta {
+    border-color: rgba(255,255,255,.34);
+    background: rgba(255,255,255,.10);
+    color: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+  }
+  .heroi h1 {
+    font-size: clamp(37px, 10.2vw, 72px);
+    margin: 0 0 14px;
+    color: #fff;
+    text-wrap: balance;
+    text-shadow: 0 2px 30px rgba(0,0,0,.4);
+  }
+  .heroi h1.n-curto { font-size: clamp(46px, 14.6vw, 104px); }
+  .heroi h1.n-longo { font-size: clamp(29px, 7.4vw, 54px); letter-spacing: -.03em; }
+  .heroi .conduz {
+    color: rgba(255,255,255,.9);
+    font-size: clamp(16px, 4.3vw, 19px);
+    margin: 0 0 26px;
+    max-width: 32ch;
+    text-shadow: 0 1px 16px rgba(0,0,0,.45);
+  }
+  .heroi-acoes { display: flex; flex-wrap: wrap; gap: 10px; }
+  .heroi-acoes .botao.fantasma { display: none; }
+  .heroi .botao.fantasma {
+    color: #fff;
+    border-color: rgba(255,255,255,.4);
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(8px);
+  }
+  .heroi .botao.fantasma .bolha { background: rgba(255,255,255,.18); }
+
+  /* Sem foto o hero vira campo de cor com brilho e uma marca-d'água com as
+     iniciais. Caixa vazia com texto centralizado é o que denuncia demonstração. */
+  .heroi.sem-foto { min-height: min(58dvh, 480px); justify-content: center; padding: 96px 0 30px; }
+  .heroi.sem-foto .heroi-arte {
+    background:
+      radial-gradient(84% 62% at 22% 4%, color-mix(in srgb, var(--realce) 34%, transparent) 0%, transparent 62%),
+      linear-gradient(180deg, var(--papel) 0%, var(--fundo) 100%);
+  }
+  .heroi.sem-foto .heroi-arte::after {
+    background-image: repeating-linear-gradient(90deg, var(--fio) 0 1px, transparent 1px 84px);
+    background-color: transparent;
+    opacity: .5;
+  }
+  .heroi.sem-foto .heroi-texto,
+  .heroi.sem-foto h1 { color: var(--tinta); text-shadow: none; }
+  .heroi.sem-foto .conduz { color: var(--fraco); text-shadow: none; }
+  .heroi.sem-foto .etiqueta {
+    border-color: var(--fio);
+    background: color-mix(in srgb, var(--tinta) 4%, transparent);
+    color: var(--fraco);
+  }
+  .heroi.sem-foto .nav {
+    background: color-mix(in srgb, var(--papel) 72%, transparent);
+    border-color: var(--fio);
+    color: var(--tinta);
+  }
+  .heroi.sem-foto .sigla { background: color-mix(in srgb, var(--tinta) 7%, transparent); border-color: var(--fio); }
+  .heroi.sem-foto .nav .botao { background: var(--realce); color: var(--sobre-realce); }
+  .heroi.sem-foto .nav .botao .bolha { background: color-mix(in srgb, var(--sobre-realce) 20%, transparent); }
+  .heroi.sem-foto .botao.fantasma { color: var(--tinta); border-color: var(--fio); background: transparent; }
+  .heroi.sem-foto .botao.fantasma .bolha { background: color-mix(in srgb, var(--tinta) 8%, transparent); }
+  .marca-agua {
+    position: absolute;
+    right: 3%;
+    bottom: 6%;
+    font-family: var(--display);
+    font-weight: var(--peso);
+    font-size: 38vw;
+    line-height: .74;
+    letter-spacing: -.06em;
+    color: color-mix(in srgb, var(--tinta) 6%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+  /* Placa com o monograma: o lugar da foto que ainda não existe. Melhor uma
+     peça desenhada de propósito do que meia tela de gradiente vazio. */
+  .placa { display: none; }
+
+  /* ---- ficha de prova social --------------------------------------------
+     Sobe por cima do hero. Cartão que cruza a dobra é o truque mais barato
+     para a página parecer composta em vez de empilhada. E é aqui que a nota do
+     Google fica grande: é o ativo que o dono já conquistou e nunca usou. */
+  .ficha-fora { position: relative; z-index: 3; margin-top: -46px; }
+  .ficha .nucleo { padding: 22px; display: grid; gap: 20px; }
+  .ficha-nota { display: flex; align-items: center; gap: 16px; }
+  .nota-num {
+    font-family: var(--display);
+    font-weight: var(--peso);
+    letter-spacing: -.04em;
+    font-size: clamp(52px, 15vw, 76px);
+    line-height: .84;
+    font-variant-numeric: tabular-nums;
+  }
+  .nota-lado { display: grid; gap: 6px; min-width: 0; }
+  .estrelas { color: var(--ouro); display: block; }
+  .nota-txt { font-size: 13.5px; color: var(--fraco); line-height: 1.35; }
+  .nota-txt b { color: var(--tinta); font-weight: 600; }
+  .selo-max {
+    display: table;
+    margin-top: 6px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--realce) 12%, transparent);
+    color: var(--realce);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .ficha-fatos {
+    display: grid;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid var(--fio);
+  }
+  .fato span {
+    display: block;
+    color: var(--fraco);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .fato strong { font-weight: 600; font-size: 15px; line-height: 1.35; }
+
+  /* ---- seções ------------------------------------------------------------ */
+  .secao { padding: 86px 0; }
+  .secao.calma { background: color-mix(in srgb, var(--tinta) 3.5%, var(--fundo)); }
+  .cabeca { margin-bottom: 34px; max-width: 46ch; }
+  .cabeca h2 { font-size: clamp(32px, 8.4vw, 58px); }
+  .cabeca .conduz { margin: 16px 0 0; color: var(--fraco); }
+
+  /* ---- serviços em lista editorial --------------------------------------
+     Cada linha é um link de WhatsApp com a mensagem já escrita. Doze pontos de
+     conversão no lugar de doze pílulas decorativas, e o dono percebe na hora
+     que os serviços são os dele. */
+  .lista { display: grid; }
+  .item { border-top: 1px solid var(--fio); }
+  .item:last-child { border-bottom: 1px solid var(--fio); }
+  .item a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 6px;
+    min-height: 64px;
+    transition: transform .55s var(--curva), padding-left .55s var(--curva);
+  }
+  .item .num {
+    font-family: var(--display);
+    font-weight: var(--peso);
+    font-size: 12px;
+    letter-spacing: .06em;
+    color: var(--fraco);
+    flex: none;
+    width: 26px;
+    transition: color .4s var(--curva);
+  }
+  .item .rot { font-size: clamp(17px, 4.6vw, 22px); font-weight: 500; letter-spacing: -.015em; flex: 1; }
+  .item .ir {
+    flex: none;
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--fio);
+    color: var(--fraco);
+    opacity: .55;
+    transition: opacity .5s var(--curva), transform .5s var(--curva), background-color .5s var(--curva), color .5s var(--curva);
+  }
+  .item a:hover { padding-left: 14px; }
+  .item a:hover .num { color: var(--realce); }
+  .item a:hover .ir { opacity: 1; background: var(--realce); color: var(--sobre-realce); border-color: transparent; transform: translate(2px,-2px); }
+  .item a:active { transform: scale(.995); }
+
+  /* ---- galeria -----------------------------------------------------------
+     Celular: trilho com encaixe e o próximo cartão espiando, que é o que
+     convida a arrastar. As margens negativas batem com o respiro da faixa, e
+     por isso nada disso cria rolagem lateral no corpo. */
+  .trilho {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 -20px;
+    padding: 4px 20px 14px;
+    scrollbar-width: none;
+  }
+  .trilho::-webkit-scrollbar { display: none; }
+  .cartao-foto {
+    flex: 0 0 78%;
+    scroll-snap-align: center;
+    margin: 0;
+  }
+  .cartao-foto .nucleo { aspect-ratio: 4/5; }
+  .cartao-foto img {
+    width: 100%; height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 1.1s var(--curva);
+  }
+  .cartao-foto:hover img { transform: scale(1.04); }
+  .vaga {
+    aspect-ratio: 4/5;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 10px;
+    padding: 18px;
+    text-align: center;
+    background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--realce) 9%, transparent), transparent 70%),
+      color-mix(in srgb, var(--tinta) 3%, var(--papel));
+    border: 1px dashed var(--fio);
+    border-radius: 22px;
+    color: var(--fraco);
+  }
+  .vaga .marca-vaga { font-size: 12px; letter-spacing: .06em; line-height: 1.4; }
+  .vaga svg { opacity: .6; }
+  .creditos { margin: 14px 0 0; font-size: 11.5px; color: var(--fraco); }
+
+  /* ---- faixa de contraste ------------------------------------------------ */
+  .banda {
+    background: var(--banda);
+    color: var(--sobre-banda);
+    padding: 86px 0;
+  }
+  .banda h2 { font-size: clamp(32px, 8.4vw, 58px); }
+  .banda .etiqueta {
+    border-color: color-mix(in srgb, var(--sobre-banda) 22%, transparent);
+    background: color-mix(in srgb, var(--sobre-banda) 8%, transparent);
+    color: color-mix(in srgb, var(--sobre-banda) 72%, transparent);
+  }
+  .banda .conduz { color: var(--fraco-banda); }
+  .passos { display: grid; gap: 2px; margin: 36px 0 34px; }
+  .passo {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 22px 0;
+    border-top: 1px solid color-mix(in srgb, var(--sobre-banda) 16%, transparent);
+  }
+  .passo:last-child { border-bottom: 1px solid color-mix(in srgb, var(--sobre-banda) 16%, transparent); }
+  .passo .n {
+    font-family: var(--display);
+    font-weight: var(--peso);
+    font-size: 15px;
+    color: var(--realce);
+    padding-top: 2px;
+  }
+  .passo h3 { font-size: clamp(19px, 5vw, 24px); margin-bottom: 5px; }
+  .passo p { margin: 0; color: var(--fraco-banda); font-size: 15px; }
+  .marcas { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 30px; }
+  .marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--sobre-banda) 18%, transparent);
+    font-size: 13.5px;
+    color: color-mix(in srgb, var(--sobre-banda) 88%, transparent);
+  }
+  .marca svg { color: var(--realce); flex: none; }
+
+  /* ---- visita ------------------------------------------------------------ */
+  .painel { padding: 4px 22px; }
+  .linha { padding: 18px 0; border-bottom: 1px solid var(--fio); display: flex; gap: 16px; align-items: flex-start; }
+  .linha:last-child { border-bottom: 0; }
+  .linha .ico { flex: none; width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: color-mix(in srgb, var(--tinta) 5%, transparent); color: var(--fraco); margin-top: 2px; }
+  .linha .txt { min-width: 0; }
+  .linha span {
+    display: block;
+    color: var(--fraco);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .linha strong { font-weight: 500; font-size: 16.5px; line-height: 1.4; }
+  /* O link herda a caixa do strong e ficava com 22px de alvo, abaixo do
+     mínimo confortável para o dedo. */
+  .linha a { display: inline-block; padding: 10px 0; margin: -10px 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .visita-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+  /* Mapa desenhado, não embutido: sem iframe, sem CDN, sem cookie de terceiro,
+     e ainda assim a seção tem imagem. */
+  .mapa { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+  .mapa-fundo {
+    position: absolute; inset: 0;
+    background-color: color-mix(in srgb, var(--tinta) 4%, var(--papel));
+    background-image:
+      linear-gradient(var(--fio) 1px, transparent 1px),
+      linear-gradient(90deg, var(--fio) 1px, transparent 1px),
+      linear-gradient(var(--fio) 1px, transparent 1px),
+      linear-gradient(90deg, var(--fio) 1px, transparent 1px);
+    background-size: 92px 92px, 92px 92px, 23px 23px, 23px 23px;
+  }
+  .mapa-via { position: absolute; background: color-mix(in srgb, var(--tinta) 13%, transparent); }
+  .mapa::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 70px 20px color-mix(in srgb, var(--papel) 70%, transparent);
+    pointer-events: none;
+  }
+  .mapa-pino {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%,-50%);
+    display: grid;
+    place-items: center;
+  }
+  .mapa-pino i {
+    position: absolute;
+    width: 92px; height: 92px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--realce) 18%, transparent);
+    animation: pulsa 2.8s var(--curva) infinite;
+  }
+  @keyframes pulsa { 0% { transform: scale(.55); opacity: .9; } 70%,100% { transform: scale(1.35); opacity: 0; } }
+  .mapa-pino b {
+    position: relative;
+    width: 22px; height: 22px;
+    border-radius: 999px;
+    background: var(--realce);
+    border: 4px solid var(--papel);
+    box-shadow: 0 6px 16px rgba(var(--sombra-cor), .3);
+  }
+
+  /* ---- fecho ------------------------------------------------------------- */
+  .fecho .nucleo { padding: 52px 26px; text-align: center; }
+  .fecho h2 { font-size: clamp(34px, 9vw, 62px); margin-bottom: 14px; text-wrap: balance; }
+  .fecho .conduz { margin: 0 auto 28px; max-width: 34ch; color: var(--fraco); }
+  .fecho .tel { display: block; margin-top: 22px; font-size: 14px; color: var(--fraco); }
+  .fecho .tel a { font-weight: 600; color: var(--tinta); }
+
+  /* ---- bloco do dono ----------------------------------------------------
+     Última seção antes do rodapé, e a que mais vende. O dono chega aqui já
+     tendo visto a página inteira e lê que cada dado ali é dele. */
+  .dono { padding-top: 0; }
+  .dono .molde { background: color-mix(in srgb, var(--realce) 7%, var(--papel)); }
+  .dono .nucleo { padding: 32px 24px; background: color-mix(in srgb, var(--realce) 4%, var(--papel)); }
+  .dono h2 { font-size: clamp(26px, 6.6vw, 38px); margin-bottom: 14px; }
+  .dono p { margin: 0 0 22px; color: var(--fraco); font-size: 15.5px; }
+  .confere { display: grid; gap: 11px; margin: 0 0 26px; }
+  .confere li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; }
+  .confere svg { flex: none; color: var(--realce); margin-top: 4px; }
+
+  /* ---- rodapé ------------------------------------------------------------ */
+  .rodape {
+    border-top: 1px solid var(--fio);
+    color: var(--fraco);
+    font-size: 11.5px;
+    line-height: 1.8;
+    padding: 30px 0 122px;
+  }
+  .rodape .faixa { max-width: 760px; }
+
+  /* ---- doca fixa ---------------------------------------------------------
+     Só entra depois que o hero sai da tela: antes disso o botão do hero já dá
+     conta e a barra só atrapalharia a primeira impressão. */
+  .doca {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 6;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--fundo) 84%, transparent);
+    backdrop-filter: blur(18px) saturate(1.3);
+    border-top: 1px solid var(--fio);
+    transform: translateY(130%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .65s var(--curva), opacity .4s var(--curva);
+  }
+  .doca.mostra { transform: none; opacity: 1; pointer-events: auto; }
+  .doca .botao {
+    width: 100%;
+    background: #25d366;
+    color: #04281a;
+    box-shadow: 0 12px 30px -14px rgba(37,211,102,.9);
+  }
+  .doca .botao .bolha { background: rgba(4,40,26,.14); }
+
+  /* ---- revelação --------------------------------------------------------- */
+  .revela {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(6px);
+    transition: opacity .9s var(--curva), transform .9s var(--curva), filter .9s var(--curva);
+  }
+  .revela.dentro { opacity: 1; transform: none; filter: none; }
+
+  /* ---- desktop -----------------------------------------------------------
+     A partir daqui a foto deixa de ser fundo e vira coluna. O texto volta para
+     o papel do tema, uma segunda foto invade a coluna de texto e a nota ganha
+     um chip flutuante sobre a imagem. */
+  @media (min-width: 900px) {
+    body { font-size: 17px; }
+    .heroi {
+      min-height: min(86dvh, 780px);
+      padding: 132px 0 96px;
+      border-radius: 0 0 48px 48px;
+      justify-content: center;
+    }
+    .heroi-arte { left: auto; right: 0; width: 47%; overflow: visible; }
+    .quadro-a {
+      border-radius: 40px 0 0 40px;
+      box-shadow: 0 40px 90px -50px rgba(0,0,0,.6);
+      /* A foto se dissolve por máscara, não por camada de cor por cima. Véu
+         sobreposto sempre deixa uma borda visível onde ele acaba, porque o
+         que está embaixo continua lá; a máscara remove o pixel e não há o
+         que marcar. Sem isto sobrava um risco vertical no meio do hero. */
+      -webkit-mask-image: linear-gradient(90deg,
+        transparent 0%, rgba(0,0,0,.18) 14%, rgba(0,0,0,.62) 34%, #000 58%);
+      mask-image: linear-gradient(90deg,
+        transparent 0%, rgba(0,0,0,.18) 14%, rgba(0,0,0,.62) 34%, #000 58%);
+    }
+    .heroi-arte::after {
+      border-radius: 40px 0 0 40px;
+      /* Interpolar para rgba(0,0,0,0) é interpolar para PRETO transparente: o
+         navegador atravessa cinzas sujos no meio do caminho e desenha uma
+         borda fantasma. A parada tem que ser a mesma cor com alfa zero. E
+         quatro paradas em vez de duas, para a transição cobrir metade da
+         coluna em vez de terminar seca em 30%. */
+      /* Com a máscara fazendo a dissolução lateral, aqui sobra só o
+         escurecimento de baixo, que existe para o rodapé do hero ter
+         contraste. Preto para preto transparente: mesma cor, sem cinza. */
+      background: linear-gradient(0deg,
+                    rgba(6,6,7,.30) 0%,
+                    rgba(6,6,7,.11) 26%,
+                    rgba(6,6,7,0) 48%);
+    }
+    .heroi-texto { color: var(--tinta); max-width: 47%; }
+    .heroi h1 { color: var(--tinta); text-shadow: none; letter-spacing: -.04em; font-size: 76px; }
+    .heroi h1.n-curto { font-size: 104px; }
+    .heroi h1.n-longo { font-size: 54px; letter-spacing: -.032em; }
+    .heroi .conduz { color: var(--fraco); text-shadow: none; font-size: 19px; max-width: 34ch; }
+    .heroi .etiqueta {
+      border-color: var(--fio);
+      background: color-mix(in srgb, var(--tinta) 3%, transparent);
+      color: var(--fraco);
+      backdrop-filter: none;
+    }
+    .heroi-acoes .botao.fantasma { display: inline-flex; }
+    .heroi .botao.fantasma { color: var(--tinta); border-color: var(--fio); background: transparent; backdrop-filter: none; }
+    .heroi .botao.fantasma .bolha { background: color-mix(in srgb, var(--tinta) 8%, transparent); }
+    .nav {
+      left: 50%;
+      max-width: 1100px;
+      width: 100%;
+      justify-content: space-between;
+      background: color-mix(in srgb, var(--papel) 62%, transparent);
+      border-color: var(--fio);
+      color: var(--tinta);
+    }
+    .nav b { max-width: 420px; font-size: 15px; }
+    .sigla { background: color-mix(in srgb, var(--tinta) 7%, transparent); border-color: var(--fio); }
+    .nav .botao { background: var(--realce); color: var(--sobre-realce); }
+    .nav .botao .bolha { background: color-mix(in srgb, var(--sobre-realce) 20%, transparent); }
+
+    .quadro-b {
+      display: block;
+      position: absolute;
+      left: -78px;
+      bottom: 54px;
+      width: 208px;
+      z-index: 2;
+      box-shadow: 0 34px 70px -30px rgba(var(--sombra-cor), .5);
+    }
+    .quadro-b .nucleo { aspect-ratio: 3/4; }
+    .quadro-b img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .chip-nota {
+      display: flex;
+      position: absolute;
+      right: 28px;
+      top: 146px;
+      z-index: 2;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.3);
+      backdrop-filter: blur(16px) saturate(1.4);
+      color: #fff;
+      font-size: 14px;
+      text-shadow: 0 1px 10px rgba(0,0,0,.35);
+    }
+    .chip-nota strong { font-weight: 700; }
+    .heroi.sem-foto .chip-nota {
+      background: color-mix(in srgb, var(--papel) 80%, transparent);
+      border-color: var(--fio);
+      color: var(--tinta);
+      text-shadow: none;
+    }
+    .heroi.sem-foto { min-height: min(78dvh, 680px); padding: 140px 0 108px; }
+    .heroi.sem-foto .heroi-arte { left: 0; width: 100%; }
+    .marca-agua { display: none; }
+    .placa {
+      display: block;
+      position: absolute;
+      right: 7%;
+      top: 50%;
+      transform: translateY(-50%) rotate(-1.4deg);
+      width: 340px;
+    }
+    .placa .nucleo {
+      aspect-ratio: 4/5;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 16px;
+      border: 1px solid var(--fio);
+      background:
+        radial-gradient(130% 88% at 50% 4%, color-mix(in srgb, var(--realce) 26%, transparent), transparent 66%),
+        var(--papel);
+    }
+    .placa .mono {
+      font-family: var(--display);
+      font-weight: var(--peso);
+      font-size: 104px;
+      letter-spacing: -.05em;
+      line-height: 1;
+      color: var(--realce);
+    }
+    .placa small {
+      font-size: 10.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--fraco);
+    }
+
+    .ficha-fora { margin-top: -64px; }
+    .ficha .nucleo {
+      padding: 26px 30px;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 34px;
+    }
+    .ficha-fatos {
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      gap: 30px;
+      padding: 0 0 0 34px;
+      border-top: 0;
+      border-left: 1px solid var(--fio);
+    }
+    .ficha .botao { white-space: nowrap; }
+
+    .secao { padding: 128px 0; }
+    .cabeca { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; max-width: none; margin-bottom: 48px; }
+    .cabeca > div { max-width: 46ch; }
+    .lista { grid-template-columns: 1fr 1fr; column-gap: 54px; }
+    .item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid var(--fio); }
+
+    .trilho {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      overflow: visible;
+      margin: 0;
+      padding: 0;
+    }
+    .cartao-foto:first-child { grid-column: span 3; }
+    .cartao-foto:first-child .nucleo { aspect-ratio: 16/7; }
+
+    .banda { padding: 128px 0; }
+    .banda-grade { display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: start; }
+    .passos { margin: 0; }
+
+    .visita-grade { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; align-items: start; }
+    .mapa { aspect-ratio: 1; }
+
+    .fecho .nucleo { padding: 96px 40px; }
+    .dono .nucleo { padding: 52px 48px; }
+    .dono-grade { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+
+    .doca {
+      left: auto; right: 26px; bottom: 26px;
+      padding: 0;
+      background: none;
+      border: 0;
+      backdrop-filter: none;
+    }
+    .doca .botao { width: auto; }
+    .rodape { padding-bottom: 40px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; filter: none; transition: none; }
+    .foto-a { animation: none; }
+    .mapa-pino i { animation: none; }
+    * { transition-duration: .01ms !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="aviso">
+  <span class="marca-aviso">Prévia</span>Feita por <b>Djonathan</b>. Não é o site oficial.
+</div>
+
+<header class="heroi sem-foto">
+  <div class="heroi-arte">
+    <span class="marca-agua" aria-hidden="true">CD</span><div class="placa molde"><div class="nucleo"><span class="mono">CD</span><small>Restaurante</small></div></div>
+    <div class="chip-nota"><svg class="estrelas" viewBox="0 0 90 17" width="90" height="17" aria-hidden="true"><defs><path id="es-c" d="M9 1.7l2.12 4.3 4.75.69-3.44 3.35.81 4.73L9 12.53 4.76 14.77l.81-4.73L2.13 6.69l4.75-.69z"/><clipPath id="cp-c"><rect x="0" y="0" width="90.0" height="17"/></clipPath></defs><g fill="currentColor" opacity=".2"><use href="#es-c" x="0"/><use href="#es-c" x="18"/><use href="#es-c" x="36"/><use href="#es-c" x="54"/><use href="#es-c" x="72"/></g><g fill="currentColor" clip-path="url(#cp-c)"><use href="#es-c" x="0"/><use href="#es-c" x="18"/><use href="#es-c" x="36"/><use href="#es-c" x="54"/><use href="#es-c" x="72"/></g></svg><span><strong>5,0</strong></span></div>
+  </div>
+  <nav class="nav">
+    <span class="nav-marca">
+      <span class="sigla">CD</span>
+      <b>Cozinha Da Dona Lulu</b>
+    </span>
+    <a class="botao miudo" href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20agendar%20um%20hor%C3%A1rio%20na%20Cozinha%20Da%20Dona%20Lulu.">WhatsApp<span class="bolha"><svg viewBox="0 0 17 17" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M13.6 8.9c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.1-.3.2-.5.1-.2-.1-.9-.4-1.8-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.3c.1.1 1.6 2.4 3.8 3.4.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3M8.5 15.4c-1.2 0-2.4-.3-3.4-.9l-.2-.1-2.5.6.7-2.4-.2-.3c-.7-1.1-1-2.3-1-3.6C1.9 5 4.9 2 8.5 2c1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6 0 3.6-3 6.9-6.5 6.9M14.2 2.3C12.7.8 10.7 0 8.5 0 4 0 .4 3.6.4 8.1c0 1.4.4 2.8 1.1 4L.3 16.4l4.4-1.1c1.2.6 2.5 1 3.8 1 4.5 0 8.1-3.6 8.1-8.1 0-2.2-.8-4.2-2.4-5.9"/></svg></span></a>
+  </nav>
+  <div class="heroi-grade faixa">
+    <div class="heroi-texto">
+      <p class="etiqueta revela">Restaurante · Plano Piloto</p>
+      <h1 class="revela n-medio">Cozinha Da Dona Lulu</h1>
+      <p class="conduz revela">Atendimento em Plano Piloto. Chame no WhatsApp e escolha seu horário.</p>
+      <div class="heroi-acoes revela">
+        <a class="botao" href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20agendar%20um%20hor%C3%A1rio%20na%20Cozinha%20Da%20Dona%20Lulu.">Agendar meu horário<span class="bolha"><svg viewBox="0 0 17 17" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M13.6 8.9c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.1-.3.2-.5.1-.2-.1-.9-.4-1.8-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.3c.1.1 1.6 2.4 3.8 3.4.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3M8.5 15.4c-1.2 0-2.4-.3-3.4-.9l-.2-.1-2.5.6.7-2.4-.2-.3c-.7-1.1-1-2.3-1-3.6C1.9 5 4.9 2 8.5 2c1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6 0 3.6-3 6.9-6.5 6.9M14.2 2.3C12.7.8 10.7 0 8.5 0 4 0 .4 3.6.4 8.1c0 1.4.4 2.8 1.1 4L.3 16.4l4.4-1.1c1.2.6 2.5 1 3.8 1 4.5 0 8.1-3.6 8.1-8.1 0-2.2-.8-4.2-2.4-5.9"/></svg></span></a>
+        <a class="botao fantasma" href="#servicos">Ver serviços<span class="bolha"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="ficha-fora">
+    <div class="faixa">
+      <div class="ficha molde revela">
+        <div class="nucleo">
+          <div class="ficha-nota"><span class="nota-num">5,0</span><span class="nota-lado"><svg class="estrelas" viewBox="0 0 90 17" width="90" height="17" aria-hidden="true"><defs><path id="es-f" d="M9 1.7l2.12 4.3 4.75.69-3.44 3.35.81 4.73L9 12.53 4.76 14.77l.81-4.73L2.13 6.69l4.75-.69z"/><clipPath id="cp-f"><rect x="0" y="0" width="90.0" height="17"/></clipPath></defs><g fill="currentColor" opacity=".2"><use href="#es-f" x="0"/><use href="#es-f" x="18"/><use href="#es-f" x="36"/><use href="#es-f" x="54"/><use href="#es-f" x="72"/></g><g fill="currentColor" clip-path="url(#cp-f)"><use href="#es-f" x="0"/><use href="#es-f" x="18"/><use href="#es-f" x="36"/><use href="#es-f" x="54"/><use href="#es-f" x="72"/></g></svg><span class="nota-txt">Avaliação no Google<span class="selo-max">Nota máxima</span></span></span></div>
+          <div class="ficha-fatos">
+            <div class="fato"><span>Onde</span><strong>Plano Piloto</strong></div>
+          </div>
+          <a class="botao" href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20agendar%20um%20hor%C3%A1rio%20na%20Cozinha%20Da%20Dona%20Lulu.">Agendar meu horário<span class="bolha"><svg viewBox="0 0 17 17" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M13.6 8.9c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.1-.3.2-.5.1-.2-.1-.9-.4-1.8-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.3c.1.1 1.6 2.4 3.8 3.4.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3M8.5 15.4c-1.2 0-2.4-.3-3.4-.9l-.2-.1-2.5.6.7-2.4-.2-.3c-.7-1.1-1-2.3-1-3.6C1.9 5 4.9 2 8.5 2c1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6 0 3.6-3 6.9-6.5 6.9M14.2 2.3C12.7.8 10.7 0 8.5 0 4 0 .4 3.6.4 8.1c0 1.4.4 2.8 1.1 4L.3 16.4l4.4-1.1c1.2.6 2.5 1 3.8 1 4.5 0 8.1-3.6 8.1-8.1 0-2.2-.8-4.2-2.4-5.9"/></svg></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<main>
+
+  <section class="secao" id="servicos">
+    <div class="faixa">
+      <div class="cabeca revela">
+        <div>
+          <p class="etiqueta">O que fazemos</p>
+          <h2>Serviços</h2>
+        </div>
+      </div>
+      <ol class="lista">
+          <li class="item revela"><a href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20falar%20sobre%20corte."><span class="num">01</span><span class="rot">Corte</span><span class="ir"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a></li>
+          <li class="item revela"><a href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20falar%20sobre%20escova."><span class="num">02</span><span class="rot">Escova</span><span class="ir"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a></li>
+          <li class="item revela"><a href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20falar%20sobre%20colora%C3%A7%C3%A3o."><span class="num">03</span><span class="rot">Coloração</span><span class="ir"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a></li>
+          <li class="item revela"><a href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20falar%20sobre%20hidrata%C3%A7%C3%A3o."><span class="num">04</span><span class="rot">Hidratação</span><span class="ir"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a></li>
+          <li class="item revela"><a href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20falar%20sobre%20progressiva."><span class="num">05</span><span class="rot">Progressiva</span><span class="ir"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a></li>
+          <li class="item revela"><a href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20falar%20sobre%20penteado."><span class="num">06</span><span class="rot">Penteado</span><span class="ir"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a></li>
+      </ol>
+      
+    </div>
+  </section>
+
+  <section class="secao calma" id="galeria">
+    <div class="faixa">
+      <div class="cabeca revela">
+        <div>
+          <p class="etiqueta">Galeria</p>
+          <h2>Seu espaço aqui</h2>
+          <p class="conduz">Estas três vagas ficam com fotos suas. Me mande pelo WhatsApp as que você gosta e eu coloco.</p>
+        </div>
+      </div>
+      <div class="trilho">
+          <div class="cartao-foto revela"><div class="vaga"><svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.2 5.6h2.6l1-1.6h4.4l1 1.6h2.6v7.2H2.2z"/><circle cx="8" cy="9.2" r="2.4"/></svg><span class="marca-vaga">Sua foto aqui</span></div></div>
+          <div class="cartao-foto revela"><div class="vaga"><svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.2 5.6h2.6l1-1.6h4.4l1 1.6h2.6v7.2H2.2z"/><circle cx="8" cy="9.2" r="2.4"/></svg><span class="marca-vaga">Sua foto aqui</span></div></div>
+          <div class="cartao-foto revela"><div class="vaga"><svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.2 5.6h2.6l1-1.6h4.4l1 1.6h2.6v7.2H2.2z"/><circle cx="8" cy="9.2" r="2.4"/></svg><span class="marca-vaga">Sua foto aqui</span></div></div>
+      </div>
+      <p class="creditos">Sem foto no perfil do Google ainda. As três vagas acima ficam com fotos suas.</p>
+    </div>
+  </section>
+
+  <section class="banda" id="como">
+    <div class="faixa">
+      <div class="banda-grade">
+        <div>
+          <p class="etiqueta revela">Como funciona</p>
+          <h2 class="revela">Falar com a gente leva menos de um minuto</h2>
+          <p class="conduz revela" style="margin:16px 0 30px;max-width:38ch">Sem aplicativo novo, sem ligação e sem esperar horário comercial para escrever.</p>
+          
+          <a class="botao claro revela" href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20agendar%20um%20hor%C3%A1rio%20na%20Cozinha%20Da%20Dona%20Lulu.">Agendar meu horário<span class="bolha"><svg viewBox="0 0 17 17" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M13.6 8.9c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.1-.3.2-.5.1-.2-.1-.9-.4-1.8-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.3c.1.1 1.6 2.4 3.8 3.4.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3M8.5 15.4c-1.2 0-2.4-.3-3.4-.9l-.2-.1-2.5.6.7-2.4-.2-.3c-.7-1.1-1-2.3-1-3.6C1.9 5 4.9 2 8.5 2c1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6 0 3.6-3 6.9-6.5 6.9M14.2 2.3C12.7.8 10.7 0 8.5 0 4 0 .4 3.6.4 8.1c0 1.4.4 2.8 1.1 4L.3 16.4l4.4-1.1c1.2.6 2.5 1 3.8 1 4.5 0 8.1-3.6 8.1-8.1 0-2.2-.8-4.2-2.4-5.9"/></svg></span></a>
+        </div>
+        <div class="passos">
+          <div class="passo revela"><span class="n">01</span><div><h3>Toque no botão</h3><p>A conversa abre direto no seu WhatsApp, sem cadastro e sem formulário.</p></div></div>
+          <div class="passo revela"><span class="n">02</span><div><h3>Diga o que precisa</h3><p>A mensagem já vai escrita. Você completa em uma linha e envia.</p></div></div>
+          <div class="passo revela"><span class="n">03</span><div><h3>Combine o horário</h3><p>A resposta chega no mesmo lugar onde você já conversa todo dia.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao" id="visita">
+    <div class="faixa">
+      <div class="cabeca revela">
+        <div>
+          <p class="etiqueta">Onde e quando</p>
+          <h2>Venha nos visitar</h2>
+        </div>
+      </div>
+      <div class="visita-grade">
+        <div>
+          <div class="molde revela"><div class="nucleo painel">
+            <div class="linha"><span class="ico"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 14.5s5-4.2 5-7.6A5 5 0 0 0 3 6.9c0 3.4 5 7.6 5 7.6Z"/><circle cx="8" cy="6.9" r="1.9"/></svg></span><div class="txt"><span>Endereço</span><strong>SCLN 116  Bloco A, Loja 52, Plano Piloto</strong></div></div>
+          </div></div>
+        </div>
+        <div>
+        <div class="molde revela">
+          <div class="nucleo mapa">
+            <div class="mapa-fundo"></div>
+            <div class="mapa-via" style="left:0;right:0;top:38%;height:14px"></div>
+            <div class="mapa-via" style="left:0;right:0;top:71%;height:7px"></div>
+            <div class="mapa-via" style="top:0;bottom:0;left:29%;width:9px"></div>
+            <div class="mapa-via" style="top:0;bottom:0;left:66%;width:16px"></div>
+            <span class="mapa-pino"><i></i><b></b></span>
+          </div>
+        </div>
+        <div class="visita-acoes">
+          <a class="botao fantasma revela" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=-15.7396924&amp;mlon=-47.8932123#map=18/-15.7396924/-47.8932123">Abrir no mapa<span class="bolha"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6"/></svg></span></a>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao fecho">
+    <div class="faixa">
+      <div class="molde revela">
+        <div class="nucleo">
+          <p class="etiqueta">Estamos esperando</p>
+          <h2>Vamos marcar?</h2>
+          <p class="conduz">Manda mensagem agora. A resposta sai pelo WhatsApp.</p>
+          <a class="botao" href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20agendar%20um%20hor%C3%A1rio%20na%20Cozinha%20Da%20Dona%20Lulu.">Agendar meu horário<span class="bolha"><svg viewBox="0 0 17 17" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M13.6 8.9c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.1-.3.2-.5.1-.2-.1-.9-.4-1.8-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.3c.1.1 1.6 2.4 3.8 3.4.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3M8.5 15.4c-1.2 0-2.4-.3-3.4-.9l-.2-.1-2.5.6.7-2.4-.2-.3c-.7-1.1-1-2.3-1-3.6C1.9 5 4.9 2 8.5 2c1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6 0 3.6-3 6.9-6.5 6.9M14.2 2.3C12.7.8 10.7 0 8.5 0 4 0 .4 3.6.4 8.1c0 1.4.4 2.8 1.1 4L.3 16.4l4.4-1.1c1.2.6 2.5 1 3.8 1 4.5 0 8.1-3.6 8.1-8.1 0-2.2-.8-4.2-2.4-5.9"/></svg></span></a>
+          <span class="tel">ou ligue para <a href="tel:+5561996750147">(61) 99675-0147</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao dono">
+    <div class="faixa">
+      <div class="molde revela">
+        <div class="nucleo">
+          <div class="dono-grade">
+            <div>
+              <p class="etiqueta">Para o dono</p>
+              <h2>Esta página foi montada com o que já é seu</h2>
+              <p>Nada aqui foi inventado. Tudo que você lê saiu do seu perfil público, e a versão final entra no ar com o seu domínio.</p>
+              
+            </div>
+            <ul class="confere">
+          <li><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 4.8"/></svg><span>O nome que está no seu Google: <b>Cozinha Da Dona Lulu</b></span></li>
+          <li><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 4.8"/></svg><span>O seu bairro: <b>Plano Piloto</b></span></li>
+          <li><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 4.8"/></svg><span>A lista de serviços é um começo. Me diga os seus e eu troco</span></li>
+          <li><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 4.8"/></svg><span>A sua nota <b>5,0</b></span></li>
+          <li><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 4.8"/></svg><span>O seu WhatsApp: <b>(61) 99675-0147</b></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="rodape">
+  <div class="faixa">
+    Página de demonstração feita por Djonathan com dados públicos do OpenStreetMap,
+    licença ODbL, e do perfil público no Google. Sem foto no perfil do Google ainda. As três vagas acima ficam com fotos suas. Serviços, textos e preços
+    entram na versão final. Esta página não tem vínculo com Cozinha Da Dona Lulu e não é o site
+    oficial do estabelecimento.
+  </div>
+</footer>
+
+<div class="doca">
+  <a class="botao largo" href="https://wa.me/5561996750147?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20queria%20agendar%20um%20hor%C3%A1rio%20na%20Cozinha%20Da%20Dona%20Lulu.">Agendar meu horário<span class="bolha"><svg viewBox="0 0 17 17" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M13.6 8.9c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.1-.3.2-.5.1-.2-.1-.9-.4-1.8-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.3c.1.1 1.6 2.4 3.8 3.4.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3M8.5 15.4c-1.2 0-2.4-.3-3.4-.9l-.2-.1-2.5.6.7-2.4-.2-.3c-.7-1.1-1-2.3-1-3.6C1.9 5 4.9 2 8.5 2c1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6 0 3.6-3 6.9-6.5 6.9M14.2 2.3C12.7.8 10.7 0 8.5 0 4 0 .4 3.6.4 8.1c0 1.4.4 2.8 1.1 4L.3 16.4l4.4-1.1c1.2.6 2.5 1 3.8 1 4.5 0 8.1-3.6 8.1-8.1 0-2.2-.8-4.2-2.4-5.9"/></svg></span></a>
+</div>
+
+<script>
+
+  (function () {
+    var alvos = document.querySelectorAll('.revela');
+
+    // Escalonamento pela posição entre irmãos, não pela ordem em que o
+    // observador dispara. Sem isso a cascata sai embaralhada quando a grade
+    // inteira entra de uma vez.
+    for (var i = 0; i < alvos.length; i++) {
+      var n = alvos[i];
+      var pos = 0, ant = n.previousElementSibling;
+      while (ant) { if (ant.className.indexOf('revela') >= 0) pos++; ant = ant.previousElementSibling; }
+      n.style.transitionDelay = Math.min(pos, 8) * 55 + 'ms';
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      for (var j = 0; j < alvos.length; j++) { alvos[j].classList.add('dentro'); }
+    } else {
+      var obs = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('dentro');
+          obs.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -7% 0px', threshold: 0.1 });
+      for (var k = 0; k < alvos.length; k++) { obs.observe(alvos[k]); }
+
+      // A doca só aparece quando o hero sai de cena.
+      var heroi = document.querySelector('.heroi');
+      var doca = document.querySelector('.doca');
+      if (heroi && doca) {
+        new IntersectionObserver(function (e) {
+          doca.classList.toggle('mostra', !e[0].isIntersecting);
+        }, { threshold: 0 }).observe(heroi);
+      }
+    }
+  })();
+
+</script>
+
+</body>
+</html>

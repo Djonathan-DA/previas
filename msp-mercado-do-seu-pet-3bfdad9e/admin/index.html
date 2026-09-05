@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel — MSP Mercado do Seu Pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* A identidade é a mesma do site: o laranja da placa, o azul da parede do
+   fundo da loja. Um painel que parece outro produto faz o dono achar que
+   entrou no lugar errado. */
+:root{
+  --laranja:#F47C20; --laranja-claro:#FBA23F; --laranja-fundo:#FFF1E2;
+  --azul:#1F4C86; --verde:#7FBF3F; --vermelho:#C8553D;
+  --creme:#FFF9F3; --papel:#fff; --tinta:#231810; --fraca:#7A6959;
+  --fio:rgba(35,24,16,.11); --fio-forte:rgba(35,24,16,.2);
+  --sombra:0 1px 2px rgba(35,24,16,.04),0 8px 24px -12px rgba(35,24,16,.16);
+  --curva:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--creme);color:var(--tinta);
+  font:400 15px/1.55 Manrope,ui-sans-serif,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+h1,h2,h3{font-family:"Bricolage Grotesque",Manrope,sans-serif;font-weight:800;
+  letter-spacing:-.025em;margin:0;line-height:1.1}
+button,input,textarea,select{font:inherit;color:inherit}
+[hidden]{display:none!important}
+
+/* ── entrada ─────────────────────────────────────────────────────────── */
+#entrada{position:fixed;inset:0;display:grid;place-items:center;padding:22px;
+  background:radial-gradient(900px 500px at 50% -10%,var(--laranja-fundo),var(--creme) 62%);z-index:90}
+.cartao{width:min(100%,392px);background:var(--papel);border:1px solid var(--fio);
+  border-radius:24px;padding:38px 32px;box-shadow:var(--sombra);text-align:center}
+.cartao img{width:74px;height:74px;border-radius:50%;object-fit:cover;
+  border:3px solid var(--laranja);margin:0 auto 18px;display:block;background:#fff}
+.cartao h1{font-size:23px}
+.cartao p{color:var(--fraca);font-size:14px;margin:9px 0 26px}
+.campo{text-align:left;margin-bottom:14px}
+.campo label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fraca);margin-bottom:7px}
+.campo input,.campo textarea,.campo select{width:100%;padding:12px 14px;border-radius:12px;
+  border:1.5px solid var(--fio);background:var(--creme);transition:border-color .25s var(--curva)}
+.campo input:focus,.campo textarea:focus{outline:0;border-color:var(--laranja);background:#fff}
+.bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;
+  cursor:pointer;font-weight:700;font-size:14.5px;padding:13px 20px;border-radius:99px;
+  min-height:46px;transition:transform .3s var(--curva),box-shadow .3s var(--curva),opacity .2s}
+.bt-l{background:var(--laranja);color:#fff;box-shadow:0 10px 26px -10px rgba(244,124,32,.7);width:100%}
+.bt-l:hover{transform:translateY(-1px)}
+.bt-l:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.bt-f{background:transparent;border:1.5px solid var(--fio);color:var(--tinta)}
+.bt-f:hover{border-color:var(--laranja);color:var(--laranja)}
+.erro{color:var(--vermelho);font-size:13.5px;margin-top:12px;min-height:19px}
+
+/* ── moldura ─────────────────────────────────────────────────────────── */
+#app{display:grid;grid-template-rows:auto 1fr;height:100%}
+header{display:flex;align-items:center;gap:16px;padding:11px 18px;background:var(--papel);
+  border-bottom:1px solid var(--fio);flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:11px;font-weight:800;
+  font-family:"Bricolage Grotesque",sans-serif;font-size:15.5px}
+.marca img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid var(--laranja)}
+.espaco{flex:1}
+.aparelhos{display:flex;gap:3px;background:var(--creme);border:1px solid var(--fio);
+  border-radius:99px;padding:3px}
+.aparelhos button{background:transparent;border:0;cursor:pointer;padding:8px 15px;
+  border-radius:99px;font-size:13.5px;font-weight:600;color:var(--fraca);
+  display:flex;align-items:center;gap:7px;transition:all .28s var(--curva)}
+.aparelhos button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7}
+.aparelhos button[aria-pressed="true"]{background:var(--papel);color:var(--tinta);
+  box-shadow:0 1px 3px rgba(35,24,16,.14)}
+.aviso{font-size:13px;color:var(--fraca);display:flex;align-items:center;gap:7px}
+.bolinha{width:8px;height:8px;border-radius:50%;background:var(--fraca);flex:none}
+.bolinha.muda{background:var(--laranja-claro)}
+.bolinha.ok{background:var(--verde)}
+.bolinha.erro{background:var(--vermelho)}
+
+#corpo{display:grid;grid-template-columns:394px 1fr;min-height:0}
+
+/* Barra de abas: só existe no celular. Em tela pequena, dividir a altura entre
+   editor e prévia dava 330px para cada um, e o rodapé de botões comia metade
+   disso. Sobravam 164px para uma lista de 1100px, que foi o que apareceu como
+   uma faixa branca vazia. Aqui cada um ocupa a tela inteira e o dedo alterna. */
+.abas{display:none;gap:3px;background:var(--creme);border:1px solid var(--fio);
+  border-radius:99px;padding:3px;width:100%}
+.abas button{flex:1;background:transparent;border:0;cursor:pointer;padding:10px;
+  border-radius:99px;font-size:14px;font-weight:700;color:var(--fraca);
+  transition:all .28s var(--curva)}
+.abas button[aria-pressed="true"]{background:var(--papel);color:var(--tinta);
+  box-shadow:0 1px 3px rgba(35,24,16,.14)}
+
+
+
+/* ── editor ──────────────────────────────────────────────────────────── */
+#editor{border-right:1px solid var(--fio);background:var(--papel);
+  display:grid;grid-template-rows:auto 1fr auto;min-height:0;overflow:hidden}
+#grupos{overflow-y:auto;scrollbar-width:thin;padding-bottom:8px}
+.grupo{border-bottom:1px solid var(--fio)}
+.grupo > summary{cursor:pointer;padding:13px 18px;font-weight:700;font-size:14.5px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  list-style:none;transition:background .2s}
+.g-nome{white-space:nowrap}
+/* A amostra do que tem dentro da gaveta: um trecho do texto, as fotos ou as
+   cores. É o que permite reconhecer a seção sem abrir. */
+.g-resumo{display:flex;align-items:center;gap:5px;justify-content:flex-end;
+  min-width:0;overflow:hidden}
+.g-texto{font-weight:500;font-size:12.5px;color:var(--fraca);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.g-mini{width:27px;height:21px;object-fit:cover;border-radius:5px;
+  border:1px solid var(--fio);flex:none}
+.g-cor{width:17px;height:17px;border-radius:50%;border:1px solid var(--fio);
+  display:block;flex:none}
+.g-selo{background:var(--laranja);color:#fff;font-size:11px;font-weight:700;
+  min-width:20px;height:20px;border-radius:99px;display:grid;place-items:center;
+  padding:0 6px;flex:none}
+/* Pisca o campo que acabou de ser aberto por um clique na prévia, senão o
+   cursor aparece num lugar qualquer da lista e ninguém percebe. */
+.campo.piscando > input,.campo.piscando > textarea,
+.campo.piscando .zona-foto,.campo.piscando .linha-cor{
+  animation:piscaCampo 1.6s ease-out}
+@keyframes piscaCampo{
+  0%,100%{box-shadow:0 0 0 0 rgba(244,124,32,0)}
+  22%{box-shadow:0 0 0 5px rgba(244,124,32,.3)}
+  60%{box-shadow:0 0 0 3px rgba(244,124,32,.16)}}
+@media (prefers-reduced-motion:reduce){.campo.piscando *{animation:none}}
+/* Aviso de que dá para clicar no site. Fica no topo da lista, discreto. */
+.aponte{display:flex;gap:10px;align-items:center;padding:13px 18px;
+  background:var(--laranja-fundo);color:#8a4a12;font-size:13px;font-weight:600;
+  line-height:1.4;border-bottom:1px solid var(--fio)}
+.aponte svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7}
+.aponte span{flex:1;min-width:0}
+.aponte button{flex:none;border:1.5px solid rgba(138,74,18,.28);background:transparent;
+  color:inherit;font:700 12.5px Manrope,sans-serif;padding:7px 13px;border-radius:99px;
+  cursor:pointer;min-height:36px;transition:background .25s,border-color .25s}
+.aponte button:hover,.aponte button[aria-pressed="true"]{background:var(--laranja);
+  border-color:var(--laranja);color:#fff}
+.grupo > summary::-webkit-details-marker{display:none}
+.grupo > summary:hover{background:var(--creme)}
+.grupo > summary::after{content:"";width:7px;height:7px;border-right:2px solid var(--fraca);
+  border-bottom:2px solid var(--fraca);transform:rotate(45deg);transition:transform .3s var(--curva)}
+.grupo[open] > summary::after{transform:rotate(-135deg)}
+.grupo-corpo{padding:4px 18px 20px}
+.campo .dica{font-size:12.5px;color:var(--fraca);margin-top:5px;line-height:1.5}
+.campo .dica code{font-family:ui-monospace,Menlo,monospace;font-size:12px;
+  background:var(--laranja-fundo);color:#8a4a12;padding:1px 5px;border-radius:5px}
+.campo textarea{resize:vertical;min-height:62px;line-height:1.5}
+.linha-cor{display:flex;gap:10px;align-items:center}
+.linha-cor input[type=color]{width:48px;height:44px;padding:3px;border-radius:11px;
+  border:1.5px solid var(--fio);background:var(--creme);cursor:pointer;flex:none}
+.linha-cor input[type=text]{flex:1;font-family:ui-monospace,Menlo,monospace;font-size:13.5px}
+.zona-foto{display:flex;gap:12px;align-items:center}
+.zona-foto img{width:74px;height:56px;object-fit:cover;border-radius:10px;
+  border:1px solid var(--fio);flex:none;background:var(--creme)}
+.zona-foto .bt{flex:1;padding:10px 14px;min-height:42px;font-size:13.5px}
+.mudou{border-color:var(--laranja)!important}
+
+/* ── prévia ──────────────────────────────────────────────────────────── */
+/* No computador o palco não existe como caixa: quem é item da grade é a
+   moldura. No celular ele vira caixa de verdade para segurar a altura que
+   o JS calcula ao reduzir a escala. */
+#palco{display:contents}
+#previa{background:
+  repeating-linear-gradient(45deg,rgba(35,24,16,.022) 0 10px,transparent 10px 20px),var(--creme);
+  display:grid;place-items:center;overflow:auto;padding:20px;min-height:0}
+#moldura{background:var(--papel);border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 10px rgba(35,24,16,.07),0 30px 70px -30px rgba(35,24,16,.4);
+  border:1px solid var(--fio);transition:width .45s var(--curva),height .45s var(--curva);
+  width:100%;height:100%}
+#moldura.cel{width:390px;height:min(844px,100%);border-radius:30px;border-width:8px;
+  border-color:var(--tinta)}
+#quadro{width:100%;height:100%;border:0;display:block;background:#fff}
+
+/* ── rodapé de ações ─────────────────────────────────────────────────── */
+.acoes-pe{background:var(--papel);border-top:1px solid var(--fio);
+  padding:14px 18px;display:grid;gap:9px;box-shadow:0 -8px 24px -18px rgba(35,24,16,.4)}
+.contagem{font-size:13px;color:var(--fraca);text-align:center;min-height:18px}
+
+/* ── caixa modal ─────────────────────────────────────────────────────── */
+#modal{position:fixed;inset:0;background:rgba(35,24,16,.55);display:grid;place-items:center;
+  padding:22px;z-index:80;backdrop-filter:blur(3px)}
+#modal .cartao{text-align:left}
+#modal .cartao h1{font-size:19px;margin-bottom:8px}
+#modal code{background:var(--creme);padding:2px 6px;border-radius:5px;font-size:13px;
+  word-break:break-all}
+#modal ol{padding-left:19px;font-size:13.5px;color:var(--fraca);line-height:1.65;margin:12px 0 18px}
+#modal ol b{color:var(--tinta)}
+
+/* ── celular ────────────────────────────────────────────────────────────
+   Precisa ficar no fim da folha: as regras aqui têm a mesma
+   especificidade das de cima, então só ganham por vir depois. */
+@media(max-width:900px){
+  #corpo{grid-template-columns:1fr;grid-template-rows:1fr}
+  #editor,#previa{grid-area:1/1;min-width:0}
+  #editor{border-right:0}
+  .abas{display:flex}
+  body[data-aba="previa"] #editor{display:none}
+  body[data-aba="editar"] #previa{display:none}
+  /* No telefone a prévia já está num telefone: o alternador de aparelho só faz
+     sentido na aba da prévia, e ocupa espaço demais no cabeçalho. */
+  header .aparelhos{display:none}
+  body[data-aba="previa"] header .aparelhos{display:flex;order:9;width:100%}
+  header{padding:9px 13px;gap:10px}
+  .marca span{display:none}
+  /* O aviso encolhe em vez de empurrar o botão de sair para a linha de baixo. */
+  .aviso{font-size:12px;min-width:0;overflow:hidden;white-space:nowrap;
+    text-overflow:ellipsis}
+  header .bt-f{padding:9px 15px;min-height:40px;font-size:13.5px;flex:none}
+  #previa{padding:12px;display:block;overflow:auto}
+  #palco{display:block;position:relative;width:100%}
+  #moldura.cel{width:100%;max-width:390px;height:100%;margin:0 auto;
+    border-width:0;border-radius:16px}
+  .acoes-pe{padding:11px 13px;gap:7px}
+  .acoes-pe .bt{padding:11px 16px;min-height:44px;font-size:14px}
+  .contagem{font-size:12px;min-height:16px}
+  .grupo > summary{padding:14px 14px}
+  .grupo-corpo{padding:4px 14px 18px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── entrada ──────────────────────────────────────────────────────── -->
+<div id="entrada">
+  <form class="cartao" id="form-entrada">
+    <img src="../fotos/logo.jpg" alt="MSP Mercado do Seu Pet">
+    <h1>Painel da MSP</h1>
+    <p>Entre para editar o site da loja</p>
+    <div class="campo">
+      <label for="u">Usuário</label>
+      <input id="u" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+    </div>
+    <div class="campo">
+      <label for="s">Senha</label>
+      <input id="s" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="bt bt-l" type="submit" id="bt-entrar">Entrar</button>
+    <div class="erro" id="erro-entrada"></div>
+  </form>
+</div>
+
+<!-- ── aplicação ────────────────────────────────────────────────────── -->
+<div id="app" hidden>
+  <header>
+    <div class="marca"><img src="../fotos/logo.jpg" alt=""><span>Painel da MSP</span></div>
+    <div class="aparelhos" role="group" aria-label="Como ver a prévia">
+      <button id="bt-desk" aria-pressed="true">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Computador
+      </button>
+      <button id="bt-cel" aria-pressed="false">
+        <svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+        Celular
+      </button>
+    </div>
+    <div class="espaco"></div>
+    <div class="aviso"><span class="bolinha" id="bolinha"></span><span id="estado">Tudo salvo</span></div>
+    <button class="bt bt-f" id="bt-sair">Sair</button>
+    <div class="abas" role="group" aria-label="O que mostrar">
+      <button id="aba-editar" aria-pressed="true">Editar</button>
+      <button id="aba-previa" aria-pressed="false">Ver como ficou</button>
+    </div>
+  </header>
+
+  <div id="corpo">
+    <aside id="editor">
+      <div class="aponte">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5a1.8 1.8 0 0 1 3.6 0v6"/><path d="M12.6 11V9.4a1.7 1.7 0 0 1 3.4 0V11"/><path d="M16 11.2v-.8a1.7 1.7 0 0 1 3.4 0V15a6 6 0 0 1-6 6h-1.6a5 5 0 0 1-3.7-1.6L4 15.4a1.7 1.7 0 0 1 2.5-2.3L9 15.5"/></svg>
+        <span>Toque em qualquer parte do site para editar aquele pedaço.</span>
+        <button type="button" id="bt-guias" title="Marcar o que dá para editar">Mostrar</button>
+      </div>
+      <div id="grupos"></div>
+      <div class="acoes-pe">
+        <div class="contagem" id="contagem">Nenhuma alteração ainda</div>
+        <button class="bt bt-l" id="bt-salvar" disabled>Salvar e publicar no ar</button>
+        <button class="bt bt-f" id="bt-desfazer" disabled>Desfazer tudo</button>
+      </div>
+    </aside>
+    <main id="previa">
+      <div id="palco"><div id="moldura"><iframe id="quadro" src="../index.html?painel=1" title="Prévia do site"></iframe></div></div>
+    </main>
+  </div>
+</div>
+
+<div id="modal" hidden></div>
+
+<script src="../editor.js"></script>
+<script>
+(function () {
+"use strict";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Autenticação e guarda da chave de publicação.
+
+   A senha não fica no código: só o resultado de 210 mil rodadas de PBKDF2
+   sobre ela. Conferir é refazer a conta e comparar.
+
+   A chave do GitHub é o ponto delicado. Ela não está aqui e nunca esteve:
+   quem publica digita a chave uma vez, e ela é gravada no navegador
+   CRIPTOGRAFADA com AES-GCM, usando uma chave derivada da própria senha. Sem a
+   senha o que está gravado não serve para nada, e quem abrir o código-fonte
+   desta página não encontra credencial nenhuma.
+   ───────────────────────────────────────────────────────────────────────── */
+var USUARIO = "msp";
+var SAL = "b6cc2507399ef746edb111bd0631d8a0";
+var HASH = "7d04a156faab6ae95c97d2087e30696833b830a262edf5d621235787ebaae1f2";
+var RODADAS = 210000;
+
+var REPO = "Djonathan-DA/previas";
+var PASTA = "msp-mercado-do-seu-pet-3bfdad9e";
+var CHAVE_GUARDADA = "msp.chave.v1";
+
+var $ = function (s) { return document.querySelector(s); };
+var hex = function (buf) {
+  return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+    return ("0" + b.toString(16)).slice(-2);
+  }).join("");
+};
+var deHex = function (s) {
+  var a = new Uint8Array(s.length / 2);
+  for (var i = 0; i < a.length; i++) a[i] = parseInt(s.substr(i * 2, 2), 16);
+  return a;
+};
+
+function material(senha) {
+  return crypto.subtle.importKey("raw", new TextEncoder().encode(senha),
+    "PBKDF2", false, ["deriveBits", "deriveKey"]);
+}
+function conferirSenha(senha) {
+  return material(senha).then(function (m) {
+    return crypto.subtle.deriveBits(
+      {name: "PBKDF2", salt: deHex(SAL), iterations: RODADAS, hash: "SHA-256"}, m, 256);
+  }).then(function (b) { return hex(b) === HASH; });
+}
+function chaveDeCripto(senha) {
+  return material(senha).then(function (m) {
+    return crypto.subtle.deriveKey(
+      {name: "PBKDF2", salt: deHex(SAL + "cofre"), iterations: RODADAS, hash: "SHA-256"},
+      m, {name: "AES-GCM", length: 256}, false, ["encrypt", "decrypt"]);
+  });
+}
+function guardarChave(senha, texto) {
+  var iv = crypto.getRandomValues(new Uint8Array(12));
+  return chaveDeCripto(senha).then(function (k) {
+    return crypto.subtle.encrypt({name: "AES-GCM", iv: iv}, k,
+      new TextEncoder().encode(texto));
+  }).then(function (cifra) {
+    localStorage.setItem(CHAVE_GUARDADA, hex(iv) + "." + hex(cifra));
+  });
+}
+function lerChave(senha) {
+  var guardado = localStorage.getItem(CHAVE_GUARDADA);
+  if (!guardado || guardado.indexOf(".") < 0) return Promise.resolve(null);
+  var partes = guardado.split(".");
+  return chaveDeCripto(senha).then(function (k) {
+    return crypto.subtle.decrypt({name: "AES-GCM", iv: deHex(partes[0])}, k, deHex(partes[1]));
+  }).then(function (b) { return new TextDecoder().decode(b); })
+    .catch(function () { return null; });
+}
+
+/* ── estado ──────────────────────────────────────────────────────────── */
+var senhaSessao = null;
+var original = {};      // como o site está publicado agora
+var mudancas = {};      // só o que foi alterado nesta sessão
+var fotosNovas = {};    // caminho no repo -> base64, para subir junto
+var quadro = $("#quadro");
+var prontoQuadro = false;
+
+function doc() {
+  try { return quadro.contentDocument; } catch (e) { return null; }
+}
+function avisar(texto, classe) {
+  $("#estado").textContent = texto;
+  $("#bolinha").className = "bolinha " + (classe || "");
+}
+function contar() {
+  var n = Object.keys(mudancas).length;
+  $("#contagem").textContent = n === 0 ? "Nenhuma alteração ainda"
+    : n === 1 ? "1 alteração pronta para publicar"
+    : n + " alterações prontas para publicar";
+  $("#bt-salvar").disabled = n === 0;
+  $("#bt-desfazer").disabled = n === 0;
+  if (n) avisar("Alterações não publicadas", "muda");
+}
+
+/* ── formulário gerado a partir do mapa de campos ─────────────────────── */
+function montarEditor() {
+  var E = window.MSPEditor, alvo = $("#grupos");
+  alvo.innerHTML = "";
+  E.GRUPOS.forEach(function (grupo, i) {
+    var chaves = Object.keys(E.CAMPOS).filter(function (k) {
+      return E.CAMPOS[k].grupo === grupo;
+    });
+    if (!chaves.length) return;
+    var det = document.createElement("details");
+    det.className = "grupo";
+    // Em tela pequena o primeiro grupo aberto ocupa 611px e esconde os
+    // outros nove. Fechados, o dono vê de cara as dez seções que pode mexer.
+    if (i === 0 && window.innerWidth > 900) det.open = true;
+    var sum = document.createElement("summary");
+    var titulo = document.createElement("span");
+    titulo.className = "g-nome";
+    titulo.textContent = grupo;
+    var resumo = document.createElement("span");
+    resumo.className = "g-resumo";
+    resumo.setAttribute("data-grupo", grupo);
+    sum.appendChild(titulo);
+    sum.appendChild(resumo);
+    det.appendChild(sum);
+    var corpo = document.createElement("div");
+    corpo.className = "grupo-corpo";
+    chaves.forEach(function (k) { corpo.appendChild(montarCampo(k, E.CAMPOS[k])); });
+    det.appendChild(corpo);
+    alvo.appendChild(det);
+  });
+  desenharResumos();
+}
+
+/* Um grupo fechado que só mostra o nome obriga a abrir os dez para achar o que
+   se quer mudar. Mostrando uma amostra do que tem dentro, o dono reconhece a
+   seção sem abrir nenhuma. */
+function desenharResumos() {
+  var E = window.MSPEditor;
+  document.querySelectorAll(".g-resumo").forEach(function (caixa) {
+    var grupo = caixa.getAttribute("data-grupo");
+    var chaves = Object.keys(E.CAMPOS).filter(function (k) { return E.CAMPOS[k].grupo === grupo; });
+    var mudados = chaves.filter(function (k) { return mudancas[k] !== undefined; }).length;
+    caixa.innerHTML = "";
+
+    if (grupo === "Fotos") {
+      chaves.slice(0, 4).forEach(function (k) {
+        var im = document.createElement("img");
+        im.src = "../" + (mudancas[k] || original[k] || "");
+        im.alt = ""; im.className = "g-mini";
+        caixa.appendChild(im);
+      });
+    } else if (grupo === "Cores") {
+      chaves.forEach(function (k) {
+        var p = document.createElement("i");
+        p.className = "g-cor";
+        p.style.background = mudancas[k] || original[k] || "#fff";
+        caixa.appendChild(p);
+      });
+    } else {
+      var primeiro = chaves.find(function (k) { return (mudancas[k] || original[k] || "").trim(); });
+      var t = document.createElement("span");
+      t.className = "g-texto";
+      t.textContent = ((mudancas[primeiro] || original[primeiro] || "")
+        .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()).slice(0, 42);
+      caixa.appendChild(t);
+    }
+
+    if (mudados) {
+      var b = document.createElement("b");
+      b.className = "g-selo";
+      b.textContent = mudados;
+      caixa.appendChild(b);
+    }
+  });
+}
+
+function montarCampo(chave, campo) {
+  var caixa = document.createElement("div");
+  caixa.className = "campo";
+  var id = "c_" + chave.replace(/\./g, "_");
+  var rot = document.createElement("label");
+  rot.setAttribute("for", id);
+  rot.textContent = campo.rotulo || chave;
+  caixa.appendChild(rot);
+  var valor = original[chave] || "";
+
+  if (campo.tipo === "cor") {
+    var linha = document.createElement("div");
+    linha.className = "linha-cor";
+    var cor = document.createElement("input");
+    cor.type = "color"; cor.value = paraHex(valor);
+    var txt = document.createElement("input");
+    txt.type = "text"; txt.id = id; txt.value = valor;
+    function sincroniza(v) { cor.value = paraHex(v); txt.value = v; mudar(chave, v, [cor, txt]); }
+    cor.addEventListener("input", function () { sincroniza(cor.value); });
+    txt.addEventListener("input", function () { sincroniza(txt.value); });
+    linha.appendChild(cor); linha.appendChild(txt);
+    caixa.appendChild(linha);
+  } else if (campo.tipo === "foto") {
+    var zona = document.createElement("div");
+    zona.className = "zona-foto";
+    var mini = document.createElement("img");
+    mini.src = "../" + valor; mini.alt = "";
+    var bt = document.createElement("button");
+    bt.type = "button"; bt.className = "bt bt-f"; bt.textContent = "Trocar foto";
+    var entrada = document.createElement("input");
+    entrada.type = "file"; entrada.accept = "image/*"; entrada.hidden = true; entrada.id = id;
+    bt.addEventListener("click", function () { entrada.click(); });
+    bt.addEventListener("focus", function () { apontar(chave); });
+    mini.addEventListener("click", function () { apontar(chave); });
+    entrada.addEventListener("change", function () {
+      if (entrada.files && entrada.files[0]) trocarFoto(chave, entrada.files[0], mini, bt);
+    });
+    zona.appendChild(mini); zona.appendChild(bt); zona.appendChild(entrada);
+    caixa.appendChild(zona);
+  } else {
+    var ent = campo.linhas ? document.createElement("textarea") : document.createElement("input");
+    ent.id = id; ent.value = valor;
+    if (campo.linhas) ent.rows = campo.linhas;
+    ent.addEventListener("input", function () { mudar(chave, ent.value, [ent]); });
+    ent.addEventListener("focus", function () { apontar(chave); });
+    caixa.appendChild(ent);
+  }
+
+  if (campo.dica) {
+    var d = document.createElement("div");
+    d.className = "dica";
+    d.innerHTML = campo.dica.replace(/&/g, "&amp;")
+      .replace(/<([^>]+)>/g, "<code>&lt;$1&gt;</code>");
+    caixa.appendChild(d);
+  }
+  return caixa;
+}
+
+function paraHex(v) {
+  v = (v || "").trim();
+  if (/^#[0-9a-f]{6}$/i.test(v)) return v;
+  if (/^#[0-9a-f]{3}$/i.test(v)) return "#" + v[1]+v[1]+v[2]+v[2]+v[3]+v[3];
+  return "#000000";
+}
+
+function mudar(chave, valor, marcar) {
+  if (valor === original[chave]) delete mudancas[chave];
+  else mudancas[chave] = valor;
+  (marcar || []).forEach(function (el) {
+    el.classList.toggle("mudou", mudancas[chave] !== undefined);
+  });
+  enviarPrevia(chave, valor);
+  contar();
+  desenharResumos();
+}
+
+/* Mostra na prévia qual pedaço o campo em foco controla. É a outra metade do
+   mesmo elo: clicou no site, abriu o campo; entrou no campo, pisca no site. */
+function apontar(chave) {
+  if (!prontoQuadro) return;
+  quadro.contentWindow.postMessage({msp: "previa", acao: "destacar", campo: chave}, "*");
+}
+
+function enviarPrevia(chave, valor) {
+  if (!prontoQuadro) return;
+  quadro.contentWindow.postMessage({msp: "previa", campo: chave, valor: valor}, "*");
+}
+
+/* Redimensiona no navegador antes de subir. Foto de celular tem 4 MB, e o
+   repositório não é lugar para isso: a página ficaria lenta justamente no 4G,
+   que é como o cliente da loja abre o site. */
+function trocarFoto(chave, arquivo, mini, bt) {
+  bt.textContent = "Preparando…"; bt.disabled = true;
+  var leitor = new FileReader();
+  leitor.onload = function () {
+    var img = new Image();
+    img.onload = function () {
+      var maxL = 1400, escala = Math.min(1, maxL / img.width);
+      var c = document.createElement("canvas");
+      c.width = Math.round(img.width * escala);
+      c.height = Math.round(img.height * escala);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      var dados = c.toDataURL("image/jpeg", 0.72);
+      var nome = "fotos/" + chave.replace(/\./g, "-") + "-" + Date.now() + ".jpg";
+      fotosNovas[nome] = dados.split(",")[1];
+      mini.src = dados;
+      bt.textContent = "Trocar foto"; bt.disabled = false;
+      bt.classList.add("mudou");
+      mudar(chave, nome, [bt]);
+      // a prévia usa o dataURL para não depender de o arquivo já estar no ar
+      enviarPrevia(chave, dados);
+    };
+    img.onerror = function () { bt.textContent = "Não consegui ler essa imagem"; bt.disabled = false; };
+    img.src = leitor.result;
+  };
+  leitor.readAsDataURL(arquivo);
+}
+
+/* ── publicação ──────────────────────────────────────────────────────── */
+function api(caminho, chave, corpo, metodo) {
+  return fetch("https://api.github.com/repos/" + REPO + caminho, {
+    method: metodo || (corpo ? "PUT" : "GET"),
+    headers: {"Authorization": "Bearer " + chave, "Accept": "application/vnd.github+json"},
+    body: corpo ? JSON.stringify(corpo) : undefined
+  }).then(function (r) {
+    return r.json().then(function (j) { return {ok: r.ok, status: r.status, corpo: j}; });
+  });
+}
+
+function subirArquivo(chave, caminho, conteudoB64, mensagem) {
+  var alvo = "/contents/" + PASTA + "/" + caminho;
+  return api(alvo + "?ref=main", chave).then(function (r) {
+    var sha = (r.ok && r.corpo && r.corpo.sha) ? r.corpo.sha : undefined;
+    return api(alvo, chave, {message: mensagem, content: conteudoB64, sha: sha, branch: "main"});
+  });
+}
+
+function publicar() {
+  var bt = $("#bt-salvar");
+  bt.disabled = true; bt.textContent = "Publicando…";
+  avisar("Publicando…", "muda");
+
+  lerChave(senhaSessao).then(function (chave) {
+    if (!chave) return pedirChave().then(function (nova) { return nova; });
+    return chave;
+  }).then(function (chave) {
+    if (!chave) throw new Error("sem chave");
+    var tudo = Object.assign({}, original.__publicado || {}, mudancas);
+    var fotos = Object.keys(fotosNovas);
+    var passo = Promise.resolve();
+    fotos.forEach(function (caminho) {
+      passo = passo.then(function () {
+        return subirArquivo(chave, caminho, fotosNovas[caminho], "painel: nova foto " + caminho)
+          .then(function (r) {
+            if (!r.ok) throw new Error("foto " + caminho + ": " + (r.corpo.message || r.status));
+          });
+      });
+    });
+    return passo.then(function () {
+      var doc = {versao: 2, atualizado: new Date().toISOString(),
+                 por: "painel", campos: tudo};
+      var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(doc, null, 2))));
+      return subirArquivo(chave, "conteudo.json", b64, "painel: atualização do conteúdo");
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.corpo.message || ("HTTP " + r.status));
+      original.__publicado = tudo;
+      Object.keys(mudancas).forEach(function (k) { original[k] = mudancas[k]; });
+      mudancas = {}; fotosNovas = {};
+      document.querySelectorAll(".mudou").forEach(function (e) { e.classList.remove("mudou"); });
+      contar();
+      avisar("Publicado. O site atualiza em até 1 minuto.", "ok");
+      bt.textContent = "Salvar e publicar no ar";
+    });
+  }).catch(function (e) {
+    avisar("Não consegui publicar: " + e.message, "erro");
+    bt.textContent = "Tentar publicar de novo";
+    bt.disabled = false;
+  });
+}
+
+function pedirChave() {
+  return new Promise(function (resolve) {
+    var m = $("#modal");
+    m.hidden = false;
+    m.innerHTML =
+      '<form class="cartao">' +
+      '<h1>Falta a chave de publicação</h1>' +
+      '<p style="margin:0 0 4px">Só na primeira vez neste aparelho. Ela fica guardada aqui, protegida pela sua senha.</p>' +
+      '<ol>' +
+      '<li>Abra <b>github.com/settings/personal-access-tokens/new</b></li>' +
+      '<li>Em <b>Repository access</b>, escolha <b>Only select repositories</b> e marque <code>previas</code></li>' +
+      '<li>Em <b>Permissions → Repository</b>, ponha <b>Contents</b> em <b>Read and write</b></li>' +
+      '<li>Gere e cole a chave abaixo</li>' +
+      '</ol>' +
+      '<div class="campo"><label for="tk">Chave</label>' +
+      '<input id="tk" type="password" placeholder="github_pat_..." autocomplete="off"></div>' +
+      '<button class="bt bt-l" type="submit">Guardar e publicar</button>' +
+      '<button class="bt bt-f" type="button" id="bt-cancela" style="width:100%;margin-top:9px">Agora não</button>' +
+      '<div class="erro" id="erro-chave"></div></form>';
+    m.querySelector("#bt-cancela").addEventListener("click", function () {
+      m.hidden = true; resolve(null);
+    });
+    m.querySelector("form").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var t = m.querySelector("#tk").value.trim();
+      if (!t) return;
+      m.querySelector("#erro-chave").textContent = "Conferindo…";
+      api("", t).then(function (r) {
+        if (!r.ok) { m.querySelector("#erro-chave").textContent =
+          "Essa chave não abre o repositório. Confira o passo 2 e o 3."; return; }
+        return guardarChave(senhaSessao, t).then(function () {
+          m.hidden = true; resolve(t);
+        });
+      }).catch(function () {
+        m.querySelector("#erro-chave").textContent = "Não consegui falar com o GitHub. Está com internet?";
+      });
+    });
+  });
+}
+
+/* ── ligações ────────────────────────────────────────────────────────── */
+window.addEventListener("message", function (ev) {
+  if (ev.data && ev.data.msp === "escolheu") { abrirCampo(ev.data.campo); return; }
+  if (!ev.data || ev.data.msp !== "pronto") return;
+  prontoQuadro = true;
+  var d = doc();
+  if (!d) { avisar("Não consegui abrir a prévia", "erro"); return; }
+  original = window.MSPEditor.lerTudo(d);
+  fetch("../conteudo.json?v=" + Date.now(), {cache: "no-store"})
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { original.__publicado = (j && j.campos) || {}; })
+    .catch(function () { original.__publicado = {}; })
+    .then(function () { montarEditor(); avisar("Tudo salvo", "ok"); });
+});
+
+/* Caminho de volta do clique: o dono aponta na tela, e o painel abre a gaveta
+   certa, rola até o campo e põe o cursor dentro. Sem isso ele clicaria e teria
+   de procurar sozinho onde foi parar. */
+function abrirCampo(chave) {
+  var campo = window.MSPEditor.CAMPOS[chave];
+  if (!campo) return;
+  if (window.innerWidth <= 900) aba("editar");
+  var id = "c_" + chave.replace(/\./g, "_");
+  document.querySelectorAll("details.grupo").forEach(function (d) {
+    var nome = d.querySelector(".g-nome");
+    if (nome && nome.textContent === campo.grupo) d.open = true;
+  });
+  setTimeout(function () {
+    var ent = document.getElementById(id);
+    if (!ent) return;
+    var caixa = ent.closest(".campo");
+    (caixa || ent).scrollIntoView({behavior: "smooth", block: "center"});
+    caixa && caixa.classList.add("piscando");
+    setTimeout(function () { caixa && caixa.classList.remove("piscando"); }, 1600);
+    if (ent.type !== "file") { try { ent.focus({preventScroll: true}); } catch (e) { ent.focus(); } }
+  }, 130);
+}
+
+function aba(nome) {
+  document.body.setAttribute("data-aba", nome);
+  $("#aba-editar").setAttribute("aria-pressed", String(nome === "editar"));
+  $("#aba-previa").setAttribute("aria-pressed", String(nome === "previa"));
+}
+$("#aba-editar").addEventListener("click", function () { aba("editar"); });
+$("#aba-previa").addEventListener("click", function () { aba("previa"); ajustarEscala(); });
+// No telefone a prévia já começa em modo telefone, que é o formato em que o
+// dono vai olhar de qualquer jeito.
+aba("editar");
+if (window.innerWidth <= 900) aparelho(true);
+
+var guiasLigadas = false;
+$("#bt-guias").addEventListener("click", function () {
+  guiasLigadas = !guiasLigadas;
+  $("#bt-guias").setAttribute("aria-pressed", String(guiasLigadas));
+  $("#bt-guias").textContent = guiasLigadas ? "Esconder" : "Mostrar";
+  if (window.innerWidth <= 900) aba("previa");
+  if (prontoQuadro) {
+    quadro.contentWindow.postMessage({msp: "previa", acao: "guias", ligado: guiasLigadas}, "*");
+  }
+});
+
+$("#bt-desk").addEventListener("click", function () { aparelho(false); });
+$("#bt-cel").addEventListener("click", function () { aparelho(true); });
+function aparelho(cel) {
+  $("#moldura").classList.toggle("cel", cel);
+  $("#bt-cel").setAttribute("aria-pressed", String(cel));
+  $("#bt-desk").setAttribute("aria-pressed", String(!cel));
+  ajustarEscala();
+}
+
+/* Mostrar o site em modo computador dentro de um telefone exige encolher.
+   Tentei fazer isso só com CSS e a moldura saiu do eixo: `transform` reduz a
+   pintura mas não o espaço que o elemento ocupa, então o centralizador do pai
+   continuava mirando na caixa de 1046px. Medir e escrever os três valores de
+   uma vez é mais simples do que qualquer truque de folha de estilo. */
+var LARGURA_DESK = 1046;
+function ajustarEscala() {
+  var moldura = $("#moldura"), palco = $("#palco"), previa = $("#previa");
+  var estreito = window.innerWidth <= 900;
+  var modoCel = moldura.classList.contains("cel");
+  if (!estreito) {
+    moldura.style.transform = ""; moldura.style.width = "";
+    moldura.style.height = ""; palco.style.height = "";
+    return;
+  }
+  var caixa = previa.getBoundingClientRect();
+  var disponivel = caixa.width - 24;
+  var altura = Math.round(caixa.height - 24);
+  if (modoCel) {
+    // No celular a área da prévia rola, então o palco tem altura automática e
+    // um `height:100%` na moldura não tem em relação a que ser 100%: o iframe
+    // caía para os 150px padrão e só aparecia a tarja e o botão fixo.
+    moldura.style.transform = ""; moldura.style.width = "";
+    moldura.style.height = altura + "px";
+    palco.style.height = altura + "px";
+    return;
+  }
+  var k = Math.min(1, disponivel / LARGURA_DESK);
+  moldura.style.width = LARGURA_DESK + "px";
+  moldura.style.height = Math.round(altura / k) + "px";
+  moldura.style.transformOrigin = "top left";
+  moldura.style.transform = "scale(" + k + ")";
+  palco.style.height = altura + "px";
+}
+window.addEventListener("resize", ajustarEscala);
+
+$("#bt-salvar").addEventListener("click", publicar);
+$("#bt-desfazer").addEventListener("click", function () {
+  if (!confirm("Isso descarta tudo que você mudou desde a última publicação. Continuar?")) return;
+  mudancas = {}; fotosNovas = {};
+  quadro.contentWindow.location.reload();
+  prontoQuadro = false;
+  contar();
+});
+$("#bt-sair").addEventListener("click", function () {
+  senhaSessao = null;
+  sessionStorage.removeItem("msp.aberto");
+  location.reload();
+});
+
+$("#form-entrada").addEventListener("submit", function (ev) {
+  ev.preventDefault();
+  var bt = $("#bt-entrar"), erro = $("#erro-entrada");
+  var u = $("#u").value.trim(), s = $("#s").value;
+  bt.disabled = true; bt.textContent = "Conferindo…"; erro.textContent = "";
+  conferirSenha(s).then(function (ok) {
+    if (!ok || u.toLowerCase() !== USUARIO) {
+      erro.textContent = "Usuário ou senha não conferem.";
+      bt.disabled = false; bt.textContent = "Entrar";
+      return;
+    }
+    senhaSessao = s;
+    sessionStorage.setItem("msp.aberto", "1");
+    $("#entrada").hidden = true;
+    $("#app").hidden = false;
+  });
+});
+
+window.addEventListener("beforeunload", function (e) {
+  if (Object.keys(mudancas).length) { e.preventDefault(); e.returnValue = ""; }
+});
+})();
+</script>
+</body>
+</html>
