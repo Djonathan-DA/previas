@@ -1,0 +1,495 @@
+/* Compras da Família — tema claro/escuro, mobile-first, sem build step. */
+
+:root {
+  --verde: #0f766e;
+  --verde-claro: #10b981;
+  --fundo: #f4f6f5;
+  --superficie: #ffffff;
+  --superficie-2: #eef1f0;
+  --texto: #101816;
+  --texto-fraco: #5d6b67;
+  --linha: #dce3e1;
+  --perigo: #c0392b;
+  --sombra: 0 1px 2px rgba(16, 24, 22, .06), 0 8px 24px rgba(16, 24, 22, .07);
+  --raio: 16px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --verde: #2dd4a7;
+    --verde-claro: #34d399;
+    --fundo: #0d1412;
+    --superficie: #151d1b;
+    --superficie-2: #1d2725;
+    --texto: #eaf2ef;
+    --texto-fraco: #9aaba6;
+    --linha: #26322f;
+    --perigo: #ff6b5b;
+    --sombra: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* .vazio e os botões escondidos usam display de grid/flex, que vence o [hidden] padrão */
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  display: flex;
+  flex-direction: column;
+  overscroll-behavior-y: contain;
+}
+
+svg {
+  width: 22px; height: 22px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ---------------- topo ---------------- */
+
+.topo {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: var(--superficie);
+  border-bottom: 1px solid var(--linha);
+}
+
+.topo-marca { display: flex; align-items: center; gap: 10px; }
+.topo-marca img { border-radius: 9px; display: block; }
+.topo-marca h1 { margin: 0; font-size: 19px; letter-spacing: -.2px; }
+.topo-acoes { display: flex; gap: 4px; }
+
+/* Com quatro ícones no topo, o título não cabe junto em tela estreita. */
+@media (max-width: 380px) {
+  .topo { padding-left: 10px; padding-right: 10px; }
+  .topo-marca h1 { font-size: 17px; }
+  .topo-acoes .icone { width: 36px; height: 36px; }
+}
+@media (max-width: 339px) {
+  .topo-marca h1 { display: none; }
+}
+
+/* estado da sincronização: um pontinho colorido sobre o ícone de nuvem */
+.icone-nuvem { position: relative; }
+.nuvem-ponto {
+  position: absolute; right: 5px; bottom: 5px;
+  width: 9px; height: 9px; border-radius: 50%;
+  border: 2px solid var(--superficie);
+  background: var(--texto-fraco);
+}
+.icone-nuvem[data-situacao="desligada"] .nuvem-ponto { display: none; }
+.icone-nuvem[data-situacao="ok"] .nuvem-ponto { background: var(--verde); }
+.icone-nuvem[data-situacao="erro"] .nuvem-ponto { background: var(--perigo); }
+.icone-nuvem[data-situacao="offline"] .nuvem-ponto { background: #c8891f; }
+.icone-nuvem[data-situacao="sincronizando"] .nuvem-ponto {
+  background: var(--verde);
+  animation: pulsar 1s ease-in-out infinite;
+}
+@keyframes pulsar { 50% { opacity: .25; } }
+
+.item-lado .icone { width: 34px; height: 34px; }
+.item-lado svg { width: 20px; height: 20px; }
+
+.icone {
+  display: grid; place-items: center;
+  width: 40px; height: 40px;
+  border: 0; border-radius: 12px;
+  background: transparent; color: var(--texto-fraco);
+  cursor: pointer;
+}
+.icone:hover { background: var(--superficie-2); color: var(--texto); }
+
+/* ---------------- lista ---------------- */
+
+#conteudo { flex: 1; padding: 12px 14px 4px; }
+
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+
+.item {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+.item[data-marcado="true"] { opacity: .55; }
+.item[data-marcado="true"] .item-nome { text-decoration: line-through; }
+
+.item-foto {
+  width: 62px; height: 62px;
+  border: 0; padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--superficie-2);
+  display: grid; place-items: center;
+  color: var(--texto-fraco);
+  cursor: pointer;
+}
+.item-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.item-info { min-width: 0; }
+.item-nome {
+  margin: 0 0 2px;
+  font-size: 15.5px; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.item-detalhe {
+  margin: 0; font-size: 13px; color: var(--texto-fraco);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.item-lado { display: flex; align-items: center; gap: 2px; }
+.item-valor {
+  font-size: 15.5px; font-weight: 700;
+  white-space: nowrap; margin-right: 4px;
+}
+
+.item-check {
+  width: 34px; height: 34px; flex: none;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: transparent; color: var(--texto-fraco);
+  cursor: pointer;
+}
+.item[data-marcado="true"] .item-check { color: var(--verde); }
+.item-apagar { color: var(--texto-fraco); }
+.item-apagar:hover { color: var(--perigo); }
+
+/* Em tela estreita, um valor de 4 dígitos + os dois botões não deixam espaço para o
+   nome do produto (virava "A..."). Aí o valor e os botões descem para a 2ª linha. */
+@media (max-width: 380px) {
+  .item { grid-template-columns: 56px minmax(0, 1fr); row-gap: 6px; }
+  .item-foto { grid-row: span 2; align-self: start; width: 56px; height: 56px; }
+  .item-lado { grid-column: 2; justify-content: flex-end; }
+}
+
+.vazio {
+  margin: 48px auto; max-width: 300px;
+  text-align: center; color: var(--texto-fraco);
+  display: grid; gap: 6px;
+}
+.vazio-icone { font-size: 46px; }
+.vazio strong { color: var(--texto); font-size: 17px; }
+
+/* ---------------- rodapé ---------------- */
+
+.rodape {
+  position: sticky; bottom: 0; z-index: 5;
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  padding-bottom: calc(12px + var(--safe-b));
+  background: var(--superficie);
+  border-top: 1px solid var(--linha);
+}
+
+.totais {
+  display: grid; line-height: 1.15; flex: none;
+  border: 0; padding: 0; margin: 0;
+  background: none; color: inherit; font: inherit; text-align: left;
+  cursor: pointer;
+}
+.totais-rotulo { font-size: 12px; color: var(--texto-fraco); }
+.totais-valor {
+  /* encolhe sozinho quando o total passa dos R$ 1.000, para o botão não quebrar */
+  font-size: clamp(17px, 5.2vw, 22px);
+  font-weight: 800; letter-spacing: -.5px; white-space: nowrap;
+}
+.totais-resumo { font-size: 11.5px; color: var(--texto-fraco); white-space: nowrap; }
+
+.botao-principal {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 52px; padding: 0 14px;
+  border: 0; border-radius: 14px;
+  background: var(--verde); color: #fff;
+  font: inherit; font-weight: 700; font-size: 15.5px;
+  white-space: nowrap;
+  min-width: 0;
+  cursor: pointer;
+}
+
+/* em telas bem estreitas o botão vira só "Adicionar", senão empurra o total para fora.
+   O rótulo inteiro é UM item flex: separado, o `gap` somava ao espaço da palavra. */
+@media (max-width: 379px) {
+  .so-tela-larga { display: none; }
+}
+@media (prefers-color-scheme: dark) { .botao-principal { color: #08211c; } }
+.botao-principal:active { transform: translateY(1px); }
+
+/* ---------------- ficha do produto ---------------- */
+
+.folha {
+  width: 100%; max-width: 520px;
+  margin: auto auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: 20px 20px 0 0;
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: var(--sombra);
+}
+.folha::backdrop { background: rgba(0, 0, 0, .5); }
+@media (min-width: 560px) {
+  .folha { margin: auto; border-radius: 20px; }
+}
+
+.folha form { display: flex; flex-direction: column; max-height: 88vh; }
+
+.folha-topo {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 10px 8px 18px;
+}
+.folha-topo h2 { margin: 0; font-size: 18px; }
+
+.folha-corpo { padding: 4px 18px 16px; overflow-y: auto; display: grid; gap: 16px; }
+
+.folha-rodape {
+  display: grid; gap: 10px;
+  padding: 14px 18px;
+  padding-bottom: calc(14px + var(--safe-b));
+  border-top: 1px solid var(--linha);
+}
+.ficha-subtotal { font-size: 13.5px; color: var(--texto-fraco); text-align: center; }
+
+.foto-area { display: grid; gap: 10px; justify-items: center; }
+
+/* Vazia, fica baixa para não empurrar preço e quantidade para fora da tela;
+   com foto, cresce para dar de ver o produto. */
+.foto-previa {
+  width: 100%; height: 132px;
+  border-radius: 14px;
+  background: var(--superficie-2);
+  border: 1px dashed var(--linha);
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.foto-previa[data-vazia="false"] {
+  height: auto; aspect-ratio: 4 / 3; max-height: 30vh;
+  border-style: solid;
+}
+.foto-previa img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.foto-placeholder { color: var(--texto-fraco); }
+.foto-placeholder svg { width: 44px; height: 44px; }
+
+.foto-botoes { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+.botao-secundario {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--linha); border-radius: 12px;
+  background: var(--superficie-2); color: var(--texto);
+  font: inherit; font-weight: 600; font-size: 15px;
+  cursor: pointer;
+}
+.botao-texto {
+  border: 0; background: none; color: var(--perigo);
+  font: inherit; font-size: 14px; text-decoration: underline;
+  cursor: pointer; padding: 6px;
+}
+
+.campo { display: grid; gap: 6px; }
+.campo-rotulo { font-size: 13.5px; font-weight: 600; color: var(--texto-fraco); }
+.campo-rotulo em { font-style: normal; font-weight: 400; }
+
+.campo-entrada {
+  width: 100%;
+  min-height: 50px; padding: 0 14px;
+  border: 1px solid var(--linha); border-radius: 12px;
+  background: var(--fundo); color: var(--texto);
+  font: inherit; font-size: 16px;
+}
+.campo-entrada:focus { outline: 2px solid var(--verde); outline-offset: 1px; }
+.campo-preco { font-size: 24px; font-weight: 700; letter-spacing: -.4px; }
+
+.contador { display: flex; align-items: center; gap: 14px; }
+.contador-botao {
+  width: 46px; height: 46px;
+  border: 1px solid var(--linha); border-radius: 12px;
+  background: var(--superficie-2); color: var(--texto);
+  font: inherit; font-size: 22px; line-height: 1;
+  cursor: pointer;
+}
+.contador-valor { font-size: 19px; font-weight: 700; min-width: 30px; text-align: center; }
+
+/* ---------------- visor de foto ---------------- */
+
+.visor {
+  width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  background: rgba(0, 0, 0, .94);
+}
+.visor::backdrop { background: rgba(0, 0, 0, .94); }
+.visor img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.visor-fechar {
+  position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: 12px;
+  background: rgba(0, 0, 0, .5); color: #fff;
+}
+
+/* ---------------- aviso ---------------- */
+
+.aviso {
+  position: fixed; left: 50%; bottom: calc(96px + var(--safe-b));
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: calc(100% - 28px);
+  padding: 11px 16px;
+  border-radius: 12px;
+  background: #101816; color: #fff;
+  font-size: 14.5px; text-align: center;
+  box-shadow: var(--sombra);
+}
+
+/* ---------------- chips (categoria e sugestões de preço) ---------------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.chip {
+  border: 1px solid var(--linha); border-radius: 999px;
+  padding: 8px 13px;
+  background: var(--superficie-2); color: var(--texto);
+  font: inherit; font-size: 14px; font-weight: 500;
+  white-space: nowrap; cursor: pointer;
+}
+.chip-ativo {
+  background: var(--verde); border-color: var(--verde);
+  color: #fff; font-weight: 700;
+}
+@media (prefers-color-scheme: dark) { .chip-ativo { color: #08211c; } }
+
+/* ---------------- leitura do preço na foto ---------------- */
+
+.botao-ler {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 46px; padding: 0 16px;
+  border: 1px solid var(--verde); border-radius: 12px;
+  background: transparent; color: var(--verde);
+  font: inherit; font-weight: 700; font-size: 15px;
+  cursor: pointer;
+}
+.botao-ler:disabled { opacity: .55; cursor: default; }
+
+.leitor {
+  display: grid; gap: 9px;
+  padding: 12px 14px;
+  border: 1px solid var(--linha); border-radius: 12px;
+  background: var(--superficie-2);
+}
+.leitor-estado { margin: 0; font-size: 14px; color: var(--texto-fraco); }
+.leitor-opcoes { display: flex; flex-wrap: wrap; gap: 7px; }
+.leitor-opcoes:empty { display: none; }
+
+/* ---------------- resumo por categoria ---------------- */
+
+.dica { margin: 0; font-size: 13.5px; color: var(--texto-fraco); }
+
+.resumo-cabeca {
+  /* o total é bem mais largo que "Itens" e "No carrinho" — sem esta proporção ele
+     invade a coluna do lado assim que passa dos R$ 1.000 */
+  display: grid; grid-template-columns: 1.6fr 1fr 1.2fr; gap: 8px;
+  padding: 14px 10px;
+  border-radius: 14px;
+  background: var(--superficie-2);
+  text-align: center;
+}
+.resumo-cabeca div { display: grid; gap: 2px; min-width: 0; }
+.resumo-cabeca span { font-size: 11.5px; color: var(--texto-fraco); }
+.resumo-cabeca strong {
+  font-size: clamp(14px, 4.6vw, 18px);
+  letter-spacing: -.4px; white-space: nowrap;
+}
+
+.resumo-titulo {
+  margin: 4px 0 0; font-size: 13.5px; font-weight: 700;
+  color: var(--texto-fraco); text-transform: uppercase; letter-spacing: .4px;
+}
+
+.resumo-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.resumo-item { display: grid; gap: 5px; }
+.resumo-item-topo, .resumo-item-baixo {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+}
+.resumo-item-nome { font-size: 15px; font-weight: 600; }
+.resumo-item-valor { font-size: 15px; font-weight: 700; white-space: nowrap; }
+.resumo-item-baixo { font-size: 12.5px; color: var(--texto-fraco); }
+
+.resumo-barra {
+  height: 7px; border-radius: 999px;
+  background: var(--superficie-2); overflow: hidden;
+}
+.resumo-barra span { display: block; height: 100%; background: var(--verde); border-radius: 999px; }
+
+/* ---------------- conferência da nota ---------------- */
+
+.conferencia-bloco {
+  display: grid; gap: 7px;
+  padding: 13px 14px;
+  border: 1px solid var(--linha); border-left-width: 4px;
+  border-radius: 12px;
+  background: var(--superficie-2);
+}
+.conferencia-bloco.ok { border-left-color: var(--verde); }
+.conferencia-bloco.alto { border-left-color: var(--perigo); }
+.conferencia-bloco.baixo { border-left-color: #c8891f; }
+
+.conferencia-linha {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  font-size: 14.5px;
+}
+.conferencia-linha span { color: var(--texto-fraco); }
+.conferencia-linha.destaque {
+  padding-top: 7px; border-top: 1px solid var(--linha);
+  font-size: 16px;
+}
+.conferencia-linha.destaque strong { font-size: 18px; }
+.conferencia-recado { margin: 2px 0 0; font-size: 13.5px; color: var(--texto-fraco); }
+
+/* ---------------- tela da sincronização ---------------- */
+
+.nuvem-estado {
+  padding: 11px 14px;
+  border: 1px solid var(--linha); border-left-width: 4px;
+  border-radius: 12px;
+  background: var(--superficie-2);
+  font-size: 14px; color: var(--texto-fraco);
+}
+.nuvem-estado[data-situacao="ok"] { border-left-color: var(--verde); }
+.nuvem-estado[data-situacao="erro"] { border-left-color: var(--perigo); color: var(--texto); }
+.nuvem-estado[data-situacao="offline"] { border-left-color: #c8891f; }
+.nuvem-estado[data-situacao="sincronizando"] { border-left-color: var(--verde); }
+
+.aviso-seguranca {
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: var(--superficie-2);
+  font-size: 13px; color: var(--texto-fraco); line-height: 1.5;
+}
+
+.ajuda { font-size: 13.5px; color: var(--texto-fraco); }
+.ajuda summary {
+  cursor: pointer; padding: 8px 0;
+  font-weight: 600; color: var(--verde);
+}
+.ajuda ol { margin: 4px 0 8px; padding-left: 20px; display: grid; gap: 6px; line-height: 1.5; }
+.ajuda p { margin: 0; }
+.ajuda b { color: var(--texto); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
