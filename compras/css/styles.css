@@ -184,9 +184,11 @@ svg {
 .item-apagar { color: var(--texto-fraco); }
 .item-apagar:hover { color: var(--perigo); }
 
-/* Em tela estreita, um valor de 4 dígitos + os dois botões não deixam espaço para o
-   nome do produto (virava "A..."). Aí o valor e os botões descem para a 2ª linha. */
-@media (max-width: 380px) {
+/* O valor + os dois botões não deixam espaço para o nome do produto (virava "A...").
+   Nomes vindos do cupom são longos e trazem o peso junto — "PAO FRANCES · 0,480 kg ×
+   R$ 16,90" —, então o valor e os botões descem para a 2ª linha. O corte em 430px cobre
+   praticamente todo celular em pé (SE 375, 13/14 390, Pro Max 430). */
+@media (max-width: 430px) {
   .item { grid-template-columns: 56px minmax(0, 1fr); row-gap: 6px; }
   .item-foto { grid-row: span 2; align-self: start; width: 56px; height: 56px; }
   .item-lado { grid-column: 2; justify-content: flex-end; }
@@ -514,6 +516,30 @@ svg {
 
 .conferencia-bloco.nota { border-left-color: var(--verde); }
 .conferencia-linha.desconto strong { color: var(--verde); }
+
+/* ---------------- cada item da nota ---------------- */
+
+.produtos-nota {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1px;
+  border: 1px solid var(--linha); border-radius: 12px;
+  background: var(--linha);
+  overflow: hidden;
+}
+.produtos-nota li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 9px 12px;
+  background: var(--superficie-2);
+}
+.produto-nome {
+  font-size: 14.5px; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.produto-lado {
+  display: grid; justify-items: end; gap: 1px; flex: none; text-align: right;
+}
+.produto-lado small { font-size: 11.5px; color: var(--texto-fraco); white-space: nowrap; }
+.produto-lado strong { font-size: 14.5px; white-space: nowrap; }
 
 /* ---------------- colar uma lista ---------------- */
 

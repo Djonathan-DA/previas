@@ -168,6 +168,8 @@
       qtd: item.qtd || 1,
       marcado: !!item.marcado,
       categoria: item.categoria || 'outros',
+      medida: item.medida || '',
+      daNota: !!item.daNota,
       criadoEm: item.criadoEm || 0,
       atualizadoEm: carimbo(item),
       apagado: !!item.apagado,

@@ -535,6 +535,7 @@
     // nome da categoria com reticências. Só vale a pena quando há mais de uma peça.
     var cat = categoria(item.categoria);
     var detalhe = cat.emoji + ' ' + cat.nome +
+      (item.medida ? ' · ' + item.medida : '') +
       (item.qtd > 1 ? ' · ' + item.qtd + ' × ' + emReais(item.precoCent) : '');
 
     li.innerHTML =
@@ -594,6 +595,7 @@
       apagado: true,
       nome: '', precoCent: 0, qtd: 1, marcado: false,
       categoria: CATEGORIA_PADRAO, foto: null, fotoArquivo: null,
+      medida: '', daNota: false,
       listaId: item.listaId || null
     };
     return Dados.gravar(lapide).then(function () {
@@ -706,7 +708,41 @@
       html += '</ul><p class="dica">Categorias adivinhadas pelo nome do produto no cupom — ' +
               'pode escapar alguma.</p>';
     }
+
+    html += listaDosProdutos(n);
     return html;
+  }
+
+  /* Produto por produto, do jeito que saiu do cupom: nome, peso ou quantidade, valor
+     unitário e o que foi cobrado na linha. É o detalhe que dá para conferir de verdade. */
+  function listaDosProdutos(n) {
+    var produtos = n.produtos || [];
+    if (!produtos.length) return '';
+
+    var html = '<h3 class="resumo-titulo">Cada item da nota (' + produtos.length + ')</h3>' +
+               '<ul class="produtos-nota">';
+
+    produtos.forEach(function (p) {
+      var cat = categoria(p.categoria || Texto.adivinharCategoria(p.descricao));
+      var medida = '';
+
+      if (p.qtd && p.unidade) {
+        medida = (p.qtdTexto || String(p.qtd).replace('.', ',')) + ' ' + p.unidade.toLowerCase() +
+                 (p.unitarioCent ? ' × ' + emReais(p.unitarioCent) : '');
+      } else if (p.qtd > 1 && p.unitarioCent) {
+        medida = p.qtd + ' × ' + emReais(p.unitarioCent);
+      }
+
+      html += '<li>' +
+        '<span class="produto-nome">' + cat.emoji + ' ' + textoSeguro(p.descricao) + '</span>' +
+        '<span class="produto-lado">' +
+          (medida ? '<small>' + textoSeguro(medida) + '</small>' : '') +
+          '<strong>' + emReais(p.valorCent) + '</strong>' +
+        '</span>' +
+      '</li>';
+    });
+
+    return html + '</ul>';
   }
 
   function blocoConferencia(totalNotaCent) {
@@ -781,6 +817,7 @@
   var elNotaPago = $('nota-pago');
   var elNotaQtd = $('nota-qtd');
   var elNotaMercado = $('nota-mercado');
+  var elNotaItens = $('nota-itens');
   var elNotaConferencia = $('nota-conferencia');
   var elNotaApagar = $('nota-apagar');
 
@@ -813,9 +850,16 @@
         return {
           descricao: p.descricao,
           valorCent: p.valorCent,
+          qtd: p.qtd || null,
+          qtdTexto: p.qtdTexto || null,
+          unidade: p.unidade || null,
+          unitarioCent: p.unitarioCent || null,
           categoria: Texto.adivinharCategoria(p.descricao)
         };
       });
+      // a nota que virou lista: por padrão os itens entram, que é o caso de quem
+      // comprou primeiro e só depois foi registrar
+      elNotaItens.checked = produtosLidos.length > 0;
       atualizarConferencia();
 
       var partes = [];
@@ -860,6 +904,9 @@
     elNotaPago.value = emReais(nota ? nota.pagoCent : 0);
     elNotaQtd.value = nota && nota.qtdItens ? String(nota.qtdItens) : '';
     produtosLidos = (nota && nota.produtos) ? nota.produtos.slice() : [];
+    // já tem itens da nota na lista? então a caixa começa marcada, para uma nova
+    // leitura substituir os antigos em vez de duplicar
+    elNotaItens.checked = itensDaLista().some(function (i) { return i.daNota; });
     elNotaApagar.hidden = !nota;
     leitorNota.esconder();
     leitorNota.atualizar();
@@ -881,16 +928,25 @@
       return;
     }
 
+    var levarItens = elNotaItens.checked && produtosLidos.length > 0;
+
     garantirLista().then(function (l) {
       l.mercado = elNotaMercado.value.trim();
       l.nota = montarNota(foto, totalCent, descontoCent, pagoCent);
       return salvarListaAtiva();
     }).then(function () {
+      return levarItens ? lancarItensDaNota() : 0;
+    }).then(function (quantos) {
       sincronizarNota();
       fotoNota.soltar();
       if (elNotaDlg.open) elNotaDlg.close();
       desenhar();
       Nuvem.agendar();
+
+      if (quantos) {
+        avisar('Nota guardada com ' + quantos + (quantos > 1 ? ' itens.' : ' item.'));
+        return;
+      }
       var dif = pagoCent - totalDaLista();
       avisar(!pagoCent ? 'Nota guardada.'
         : dif === 0 ? 'Nota guardada — bateu certinho.'
@@ -898,6 +954,67 @@
     }).catch(function () {
       avisar('Não consegui guardar a nota.');
     });
+  }
+
+  /* Os produtos lidos do cupom viram itens de verdade da lista — é assim que a nota
+     "vira a lista" de quem comprou primeiro e só depois foi registrar.
+
+     Os itens nascidos da nota levam `daNota: true`. Reler a mesma nota apaga os
+     anteriores e lança de novo, em vez de duplicar a compra inteira; o que foi digitado
+     à mão fica intocado. */
+  function lancarItensDaNota() {
+    var antigos = itensDaLista().filter(function (i) { return i.daNota; });
+    var agora = Date.now();
+    var novos = produtosLidos.slice();
+
+    return Promise.all(antigos.map(apagarItem)).then(function () {
+      var gravacoes = novos.map(function (p, i) {
+        var item = itemDoProduto(p, agora + i);
+        itens.push(item);
+        return Dados.gravar(item);
+      });
+      return Promise.all(gravacoes);
+    }).then(function () { return novos.length; });
+  }
+
+  /* Uma linha do cupom vira um item. Dois casos, porque o cupom tem os dois:
+     - unidades inteiras ("2 UN x 27,90") viram quantidade 2 a R$ 27,90, e o app
+       multiplica como sempre;
+     - peso ("1,250 KG x 7,98") não cabe na quantidade inteira do app, então o item
+       fica com o valor total da linha e a medida vai no texto, para não perder
+       nem o peso nem o valor do quilo. */
+  function itemDoProduto(p, quando) {
+    var inteiro = p.qtd && p.qtd === Math.round(p.qtd) && p.qtd >= 1 && p.qtd <= 99 &&
+                  (!p.unidade || p.unidade === 'UN' || p.unidade === 'PC' ||
+                   p.unidade === 'CX' || p.unidade === 'PT' || p.unidade === 'DZ');
+
+    var qtd = 1;
+    var precoCent = p.valorCent;
+    var medida = '';
+
+    if (inteiro && p.unitarioCent) {
+      qtd = p.qtd;
+      precoCent = p.unitarioCent;
+    } else if (p.qtd && p.unidade) {
+      medida = (p.qtdTexto || String(p.qtd).replace('.', ',')) + ' ' + p.unidade.toLowerCase() +
+               (p.unitarioCent ? ' × ' + emReais(p.unitarioCent) : '');
+    }
+
+    return {
+      id: novoId() + Math.random().toString(16).slice(2, 5),
+      listaId: listaAtivaId,
+      nome: p.descricao,
+      precoCent: precoCent,
+      qtd: qtd,
+      marcado: true,          // veio da nota: já está no carrinho, já foi pago
+      categoria: p.categoria || Texto.adivinharCategoria(p.descricao),
+      medida: medida,
+      daNota: true,
+      criadoEm: quando,
+      atualizadoEm: quando,
+      foto: null,
+      fotoArquivo: null
+    };
   }
 
   function montarNota(foto, totalCent, descontoCent, pagoCent) {
@@ -912,6 +1029,10 @@
         return {
           descricao: p.descricao,
           valorCent: p.valorCent,
+          qtd: p.qtd || null,
+          qtdTexto: p.qtdTexto || null,
+          unidade: p.unidade || null,
+          unitarioCent: p.unitarioCent || null,
           categoria: p.categoria || Texto.adivinharCategoria(p.descricao)
         };
       }),
@@ -1434,6 +1555,8 @@
           qtd: i.qtd || 1,
           marcado: !!i.marcado,
           categoria: i.categoria || CATEGORIA_PADRAO,
+          medida: i.medida || '',
+          daNota: !!i.daNota,
           criadoEm: i.criadoEm || 0,
           atualizadoEm: i.atualizadoEm || i.criadoEm || 0,
           listaId: i.listaId || null,

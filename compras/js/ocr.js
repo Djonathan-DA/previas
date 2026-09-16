@@ -136,6 +136,13 @@
     'OBRIGADO', 'VOLTE\\s*SEMPRE', 'TROCA'
   ].join('|'));
 
+  /* A medida da linha do cupom, sempre ANTES do total:
+       "1,250 KG x 7,98   9,98"   → 1,250 kg a R$ 7,98
+       "2 UN x 27,90     55,80"   → 2 unidades a R$ 27,90
+     O valor unitário precisa de centavos para não confundir com medida de embalagem
+     ("TOALHA 30X50" não casa, porque depois do X não vem um valor com vírgula). */
+  var QTD_UNITARIO = /(\d{1,3}(?:[,.]\d{1,3})?)\s*(UN|KG|G|LT|L|ML|PC|CX|PT|DZ)?\s*[xX*]\s*(?:r?\$?\s*)?(\d{1,4})[.,](\d{2})(?!\d)/i;
+
   function valorNaLinha(texto) {
     var ultimo = null;
     var m;
@@ -375,17 +382,52 @@
           var valor = valorNaLinha(texto);
           if (valor === null || valor <= 0) return;
 
-          // descrição = o que sobra tirando códigos, quantidades e o próprio valor
+          /* O cupom escreve a medida antes do total: "1,250 KG x 7,98  9,98" ou
+             "2 UN x 27,90  55,80". É daqui que saem o peso e o valor unitário — sem
+             isso, item pesado viraria só um preço solto, sem dizer quanto foi comprado. */
+          var medida = texto.match(QTD_UNITARIO);
+          var qtd = null, unidade = null, unitarioCent = null;
+
+          var qtdTexto = null;
+
+          if (medida) {
+            qtdTexto = medida[1];
+            qtd = parseFloat(medida[1].replace(',', '.'));
+            unidade = medida[2] ? medida[2].toUpperCase() : null;
+            unitarioCent = centavosDe(medida[3], medida[4]);
+            if (!isFinite(qtd) || qtd <= 0) { qtd = null; qtdTexto = null; }
+          }
+
+          /* Quando o total da linha não é lido, o último valor que sobra é o UNITÁRIO —
+             e aí um item de 0,540 kg entraria pelo preço do quilo. Tendo peso e unitário,
+             dá para saber que é isso e recalcular. */
+          if (qtd && unitarioCent && valor === unitarioCent) {
+            var esperado = Math.round(qtd * unitarioCent);
+            if (Math.abs(esperado - unitarioCent) > 1) valor = esperado;
+          }
+
+          // descrição = o que sobra tirando códigos, a medida e os valores
           var descricao = texto
+            .replace(QTD_UNITARIO, ' ')
             .replace(PRECO, ' ')
             .replace(/\b\d{6,}\b/g, ' ')
             .replace(/\b\d{1,3}\s*(UN|KG|G|L|ML|PC|CX|PT|X)\b/gi, ' ')
             .replace(/^[\s\d.\-*]+/, '')
+            // código tributário solto no fim da linha ("... TOMATE ITALIANO A)" / "F")
+            .replace(/\s+[A-Z]\)?\s*$/, '')
             .replace(/\s+/g, ' ')
             .trim();
 
           if (descricao.replace(/[^A-Za-zÀ-ÿ]/g, '').length < 3) return;
-          produtos.push({ descricao: descricao, valorCent: valor });
+
+          produtos.push({
+            descricao: descricao,
+            valorCent: valor,
+            qtd: qtd,
+            qtdTexto: qtdTexto,   // "0,540" como veio impresso, sem perder o zero final
+            unidade: unidade,
+            unitarioCent: unitarioCent
+          });
         });
 
         return {
