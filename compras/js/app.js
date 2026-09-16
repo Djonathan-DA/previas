@@ -22,68 +22,6 @@
   ];
   var CATEGORIA_PADRAO = 'outros';
 
-  /* Palavras que aparecem na descrição do cupom fiscal, para separar por categoria o que
-     foi lido da nota. É chute informado, não verdade: a tela deixa corrigir. Os termos
-     estão sem acento porque a comparação é feita sobre o texto já sem acentuação. */
-  var PALAVRAS = [
-    ['hortifruti', ['ALFACE', 'TOMATE', 'CEBOLA', 'ALHO', 'BATATA', 'CENOURA', 'BANANA',
-      'MACA', 'LARANJA', 'LIMAO', 'MAMAO', 'MELANCIA', 'MELAO', 'UVA', 'MANGA', 'ABACAXI',
-      'PERA', 'MORANGO', 'ABACATE', 'GOIABA', 'COUVE', 'REPOLHO', 'BROCOLIS', 'ABOBRINHA',
-      'ABOBORA', 'PEPINO', 'PIMENTAO', 'BETERRABA', 'CHUCHU', 'MANDIOCA', 'INHAME',
-      'SALSA', 'CHEIRO VERDE', 'RUCULA', 'AGRIAO', 'ESPINAFRE', 'VERDURA', 'LEGUME',
-      'FRUTA', 'HORTIFRUTI', 'COENTRO', 'MARACUJA', 'TANGERINA', 'BERINJELA', 'QUIABO']],
-    ['carne', ['CARNE', 'BOVIN', 'SUIN', 'FRANGO', 'PEITO', 'COXA', 'SOBRECOXA', 'ASA DE',
-      'PATINHO', 'ALCATRA', 'COXAO', 'ACEM', 'MUSCULO', 'FRALDINHA', 'PICANHA', 'MAMINHA',
-      'CONTRA FILE', 'CONTRAFILE', 'FILE', 'COSTELA', 'LINGUICA', 'BACON', 'PERNIL',
-      'LOMBO', 'CUPIM', 'MOIDA', 'MOIDO', 'PEIXE', 'TILAPIA', 'SALMAO', 'SARDINHA',
-      'CAMARAO', 'MERLUZA', 'PESCADA', 'BIFE', 'HAMBURGUER', 'SALSICHA', 'PRESUNTO',
-      'MORTADELA', 'SALAME', 'CALABRESA']],
-    ['padaria', ['PAO', 'PAES', 'BAGUETE', 'BISNAGA', 'BOLO', 'ROSCA', 'SONHO', 'CROISSANT',
-      'TORTA', 'PADARIA', 'FORMA INTEGRAL', 'BRIOCHE']],
-    ['bebida', ['REFRIGERANTE', 'REFRIG', 'COCA', 'GUARANA', 'FANTA', 'SPRITE', 'PEPSI',
-      'SUCO', 'AGUA', 'CERVEJA', 'VINHO', 'ENERGETICO', 'ISOTONIC', 'CHA GELADO',
-      'NECTAR', 'REFRESCO', 'WHISKY', 'VODKA', 'CACHACA', 'ESPUMANTE', 'TONICA']],
-    ['lanche', ['BISCOITO', 'BOLACHA', 'CHOCOLATE', 'BOMBOM', 'SALGADINHO', 'CHIPS',
-      'PIPOCA', 'BALA', 'CHICLETE', 'WAFER', 'DOCE', 'PACOCA', 'AMENDOIM', 'SORVETE',
-      'PIRULITO', 'BARRA DE CEREAL', 'TORRADA', 'RUFFLES', 'DORITOS', 'TRIDENT']],
-    ['limpeza', ['DETERGENTE', 'SABAO', 'AMACIANTE', 'DESINFET', 'AGUA SANIT', 'CANDIDA',
-      'CLORO', 'ALVEJANTE', 'LIMPADOR', 'MULTIUSO', 'VEJA', 'YPE', 'OMO', 'BRILHANTE',
-      'ESPONJA', 'PANO DE CHAO', 'VASSOURA', 'RODO', 'SACO DE LIXO', 'LUSTRA',
-      'DESENGORDUR', 'LIMPA VIDRO', 'AJAX', 'PINHO']],
-    ['higiene', ['SABONETE', 'SHAMPOO', 'XAMPU', 'CONDICIONADOR', 'CREME DENTAL',
-      'PASTA DE DENTE', 'ESCOVA DENTAL', 'FIO DENTAL', 'DESODORANTE', 'PAPEL HIGIENICO',
-      'ABSORVENTE', 'FRALDA', 'LENCO', 'ALGODAO', 'COTONETE', 'HIDRATANTE', 'BARBEAR',
-      'GILLETTE', 'ENXAGUANTE', 'LISTERINE', 'COLGATE', 'PROTETOR SOLAR', 'TALCO']],
-    ['pet', ['RACAO', 'PETISCO', 'GATO', 'CACHORRO', 'CAO ', 'PEDIGREE', 'WHISKAS',
-      'AREIA HIGIENICA', 'ANTIPULGAS', 'PET ']],
-    ['casa', ['PILHA', 'LAMPADA', 'GUARDANAPO', 'PAPEL TOALHA', 'PAPEL ALUMINIO',
-      'FILME PVC', 'FOSFORO', 'ISQUEIRO', 'VELA', 'COPO DESC', 'PRATO DESC', 'TALHER',
-      'POTE', 'CABIDE', 'INSETICIDA', 'NAFTALINA']],
-    ['alimentacao', ['ARROZ', 'FEIJAO', 'MACARRAO', 'ESPAGUETE', 'FARINHA', 'ACUCAR',
-      'SAL ', 'OLEO', 'AZEITE', 'VINAGRE', 'MOLHO', 'EXTRATO DE TOMATE', 'LEITE',
-      'IOGURTE', 'QUEIJO', 'MANTEIGA', 'MARGARINA', 'REQUEIJAO', 'OVO', 'CAFE',
-      'ACHOCOLATADO', 'NESCAU', 'TODDY', 'CEREAL', 'AVEIA', 'GRANOLA', 'MILHO',
-      'ERVILHA', 'ATUM', 'SARDINHA LATA', 'TEMPERO', 'CALDO', 'CATCHUP', 'KETCHUP',
-      'MAIONESE', 'MOSTARDA', 'GELATINA', 'PUDIM', 'CREME DE LEITE', 'LEITE CONDENSADO',
-      'FERMENTO', 'AMIDO', 'LASANHA', 'PIZZA', 'CONGELAD', 'TRIGO', 'POLVILHO']]
-  ];
-
-  function semAcento(texto) {
-    return String(texto).toUpperCase()
-      .normalize('NFD').replace(/[̀-ͯ]/g, '');
-  }
-
-  function adivinharCategoria(descricao) {
-    var alvo = semAcento(descricao);
-    for (var i = 0; i < PALAVRAS.length; i++) {
-      var grupo = PALAVRAS[i];
-      for (var j = 0; j < grupo[1].length; j++) {
-        if (alvo.indexOf(grupo[1][j]) !== -1) return grupo[0];
-      }
-    }
-    return CATEGORIA_PADRAO;
-  }
-
   function categoria(id) {
     for (var i = 0; i < CATEGORIAS.length; i++) {
       if (CATEGORIAS[i].id === id) return CATEGORIAS[i];
@@ -720,7 +658,7 @@
   function categoriasDaNota(n) {
     var mapa = new Map();
     (n.produtos || []).forEach(function (p) {
-      var cat = categoria(p.categoria || adivinharCategoria(p.descricao));
+      var cat = categoria(p.categoria || Texto.adivinharCategoria(p.descricao));
       var linha = mapa.get(cat.id) || { cat: cat, qtd: 0, valorCent: 0 };
       linha.qtd += 1;
       linha.valorCent += p.valorCent || 0;
@@ -875,7 +813,7 @@
         return {
           descricao: p.descricao,
           valorCent: p.valorCent,
-          categoria: adivinharCategoria(p.descricao)
+          categoria: Texto.adivinharCategoria(p.descricao)
         };
       });
       atualizarConferencia();
@@ -974,7 +912,7 @@
         return {
           descricao: p.descricao,
           valorCent: p.valorCent,
-          categoria: p.categoria || adivinharCategoria(p.descricao)
+          categoria: p.categoria || Texto.adivinharCategoria(p.descricao)
         };
       }),
       quando: Date.now(),
@@ -1119,6 +1057,121 @@
 
     if (alvo.dataset.acao === 'abrir') trocarLista(linha.dataset.id);
     else if (alvo.dataset.acao === 'apagar') apagarLista(linha.dataset.id);
+  }
+
+  /* ---------------- colar uma lista pronta ---------------- */
+
+  var elColarDlg = $('colar-dlg');
+  var elColarTexto = $('colar-texto');
+  var elColarPrevia = $('colar-previa');
+  var elColarNova = $('colar-nova');
+  var elColarAdicionar = $('colar-adicionar');
+
+  var achadosDoTexto = [];
+
+  function abrirColar() {
+    elColarTexto.value = '';
+    elColarNova.checked = false;
+    achadosDoTexto = [];
+    atualizarPrevia();
+    if (elListasDlg.open) elListasDlg.close();
+    elColarDlg.showModal();
+    setTimeout(function () { elColarTexto.focus(); }, 60);
+  }
+
+  function atualizarPrevia() {
+    achadosDoTexto = Texto.interpretarLista(elColarTexto.value);
+    elColarAdicionar.disabled = !achadosDoTexto.length;
+    elColarAdicionar.textContent = achadosDoTexto.length
+      ? 'Adicionar ' + achadosDoTexto.length + (achadosDoTexto.length > 1 ? ' itens' : ' item')
+      : 'Adicionar à lista';
+
+    if (!elColarTexto.value.trim()) {
+      elColarPrevia.innerHTML = '';
+      return;
+    }
+    if (!achadosDoTexto.length) {
+      elColarPrevia.innerHTML = '<p class="dica">Não reconheci nenhum item nesse texto. ' +
+        'Tente um produto por linha.</p>';
+      return;
+    }
+
+    var comPreco = achadosDoTexto.filter(function (a) { return a.precoCent; }).length;
+    var html = '<p class="dica">Achei <b>' + achadosDoTexto.length + '</b> ' +
+      (achadosDoTexto.length > 1 ? 'itens' : 'item') +
+      (comPreco ? ', ' + comPreco + ' com preço' : ', nenhum com preço — dá para pôr depois') +
+      ':</p><ul class="colar-lista">';
+
+    achadosDoTexto.forEach(function (a) {
+      var cat = categoria(a.categoria);
+      html += '<li>' +
+        '<span class="colar-nome">' + cat.emoji + ' ' + textoSeguro(a.nome) + '</span>' +
+        '<span class="colar-extra">' +
+          (a.qtd > 1 ? a.qtd + '× ' : '') +
+          (a.precoCent ? emReais(a.precoCent) : '—') +
+        '</span>' +
+      '</li>';
+    });
+
+    elColarPrevia.innerHTML = html + '</ul>';
+  }
+
+  function colarDaAreaDeTransferencia() {
+    if (!navigator.clipboard || !navigator.clipboard.readText) {
+      avisar('Seu navegador não deixa colar sozinho. Cole no campo abaixo.');
+      elColarTexto.focus();
+      return;
+    }
+    navigator.clipboard.readText().then(function (texto) {
+      if (!texto || !texto.trim()) { avisar('Não tem nada copiado.'); return; }
+      elColarTexto.value = texto;
+      atualizarPrevia();
+    }).catch(function () {
+      avisar('Não consegui ler o que está copiado. Cole no campo abaixo.');
+      elColarTexto.focus();
+    });
+  }
+
+  function adicionarColados(evento) {
+    evento.preventDefault();
+    if (!achadosDoTexto.length) return;
+
+    var novos = achadosDoTexto.slice();
+    var agora = Date.now();
+
+    var preparar = elColarNova.checked
+      ? criarLista('', agora)
+      : garantirLista();
+
+    preparar.then(function () {
+      var gravacoes = novos.map(function (a, i) {
+        var item = {
+          id: novoId() + i,
+          listaId: listaAtivaId,
+          nome: a.nome,
+          precoCent: a.precoCent,
+          qtd: a.qtd,
+          marcado: false,
+          categoria: a.categoria,
+          // +i mantém a ordem do texto colado: o primeiro da lista fica no topo
+          criadoEm: agora + i,
+          atualizadoEm: agora + i,
+          foto: null,
+          fotoArquivo: null
+        };
+        itens.push(item);
+        return Dados.gravar(item);
+      });
+      return Promise.all(gravacoes);
+    }).then(function () {
+      sincronizarNota();
+      elColarDlg.close();
+      desenhar();
+      Nuvem.agendar();
+      avisar(novos.length + (novos.length > 1 ? ' itens adicionados.' : ' item adicionado.'));
+    }).catch(function () {
+      avisar('Não consegui adicionar a lista.');
+    });
   }
 
   /* ---------------- sincronização ---------------- */
@@ -1331,6 +1384,12 @@
     elNotaTotal.value = emReais(centavosDoTexto(elNotaTotal.value));
     atualizarConferencia();
   });
+
+  $('btn-colar').addEventListener('click', abrirColar);
+  $('btn-colar-area').addEventListener('click', colarDaAreaDeTransferencia);
+  $('colar-fechar').addEventListener('click', function () { elColarDlg.close(); });
+  $('form-colar').addEventListener('submit', adicionarColados);
+  elColarTexto.addEventListener('input', atualizarPrevia);
 
   $('btn-listas').addEventListener('click', abrirListas);
   $('listas-fechar').addEventListener('click', function () { elListasDlg.close(); });

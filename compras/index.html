@@ -267,11 +267,55 @@
           Começar lista nova
         </button>
       </div>
+      <button type="button" id="btn-colar" class="botao-ler">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3H9zM8 5.5H6a1 1 0 0 0-1 1V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6.5a1 1 0 0 0-1-1h-2M9 12h6M9 16h4"/></svg>
+        Colar uma lista pronta
+      </button>
     </form>
 
     <h3 class="resumo-titulo">Compras anteriores</h3>
     <div id="listas-corpo"></div>
   </div>
+</dialog>
+
+<!-- Colar uma lista pronta: texto do WhatsApp vira itens da lista -->
+<dialog id="colar-dlg" class="folha" aria-label="Colar uma lista">
+  <form id="form-colar" method="dialog">
+    <div class="folha-topo">
+      <h2>Colar uma lista</h2>
+      <button type="button" id="colar-fechar" class="icone" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="folha-corpo">
+      <p class="dica">Cole aqui a lista que veio do WhatsApp — um item por linha. Funciona
+        com traço, bolinha ou número na frente, com ou sem preço.</p>
+
+      <button type="button" id="btn-colar-area" class="botao-secundario largo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3H9zM8 5.5H6a1 1 0 0 0-1 1V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6.5a1 1 0 0 0-1-1h-2M9 12h6M9 16h4"/></svg>
+        Colar da área de transferência
+      </button>
+
+      <label class="campo">
+        <span class="campo-rotulo">Texto da lista</span>
+        <textarea id="colar-texto" class="campo-entrada campo-area" rows="7"
+                  placeholder="- Arroz 5kg&#10;2x Leite&#10;Banana - 12,90&#10;Detergente"></textarea>
+      </label>
+
+      <div id="colar-previa" class="colar-previa"></div>
+    </div>
+
+    <div class="folha-rodape">
+      <label class="escolha">
+        <input type="checkbox" id="colar-nova" />
+        <span>Criar uma lista nova com esses itens</span>
+      </label>
+      <button type="submit" id="colar-adicionar" class="botao-principal" disabled>
+        Adicionar à lista
+      </button>
+    </div>
+  </form>
 </dialog>
 
 <!-- Sincronização: a lista guardada no GitHub, para os dois celulares verem o mesmo -->
@@ -348,6 +392,7 @@
 <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
 
 <script src="js/db.js"></script>
+<script src="js/texto.js"></script>
 <script src="js/ocr.js"></script>
 <script src="js/nuvem.js"></script>
 <script src="js/app.js"></script>

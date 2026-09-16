@@ -515,6 +515,46 @@ svg {
 .conferencia-bloco.nota { border-left-color: var(--verde); }
 .conferencia-linha.desconto strong { color: var(--verde); }
 
+/* ---------------- colar uma lista ---------------- */
+
+.botao-secundario.largo { width: 100%; justify-content: center; }
+
+.campo-area {
+  min-height: 150px; padding: 12px 14px;
+  line-height: 1.5; resize: vertical;
+  font-family: inherit;
+}
+
+.colar-previa { display: grid; gap: 8px; }
+.colar-previa:empty { display: none; }
+
+.colar-lista {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1px;
+  max-height: 34vh; overflow-y: auto;
+  border: 1px solid var(--linha); border-radius: 12px;
+  background: var(--linha);
+}
+.colar-lista li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 9px 12px;
+  background: var(--superficie-2);
+}
+.colar-lista li:first-child { border-radius: 11px 11px 0 0; }
+.colar-lista li:last-child { border-radius: 0 0 11px 11px; }
+.colar-nome {
+  font-size: 14.5px; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.colar-extra { font-size: 13px; color: var(--texto-fraco); white-space: nowrap; }
+
+.escolha {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: var(--texto-fraco);
+  cursor: pointer;
+}
+.escolha input { width: 20px; height: 20px; accent-color: var(--verde); flex: none; }
+
 /* ---------------- tela da sincronização ---------------- */
 
 .nuvem-estado {

@@ -1,7 +1,7 @@
 /* Service worker: deixa o app abrir sem internet (dentro do mercado o sinal cai).
    Só guarda os arquivos do app — a lista em si fica no IndexedDB do aparelho. */
 
-var CACHE = 'compras-v3';
+var CACHE = 'compras-v4';
 
 /* O motor de leitura (vendor/ocr, ~4 MB por aparelho) fica FORA desta lista de
    propósito: ele é guardado pelo tratador de fetch na primeira vez que o usuário
@@ -11,6 +11,7 @@ var ARQUIVOS = [
   './index.html',
   './css/styles.css',
   './js/db.js',
+  './js/texto.js',
   './js/ocr.js',
   './js/nuvem.js',
   './js/app.js',
