@@ -158,16 +158,11 @@
     });
   }
 
-  function juntarNota(local, remota) {
-    if (!local) return remota || null;
-    if (!remota) return local;
-    return (remota.atualizadoEm || 0) > (local.atualizadoEm || 0) ? remota : local;
-  }
-
   // O que vai para o JSON: sem Blob de foto, só o caminho do arquivo dela no repositório.
   function paraNuvem(item) {
     return {
       id: item.id,
+      listaId: item.listaId || null,
       nome: item.nome || '',
       precoCent: item.precoCent || 0,
       qtd: item.qtd || 1,
@@ -184,10 +179,40 @@
     if (!nota) return null;
     return {
       totalCent: nota.totalCent || 0,
+      descontoCent: nota.descontoCent || 0,
+      pagoCent: nota.pagoCent || 0,
+      qtdItens: nota.qtdItens || null,
+      produtos: nota.produtos || [],
       quando: nota.quando || 0,
       atualizadoEm: nota.atualizadoEm || nota.quando || 0,
       fotoArquivo: nota.fotoArquivo || null
     };
+  }
+
+  // A lista (a ida ao mercado) leva a nota junto; a foto da nota vai por caminho.
+  function listaParaNuvem(l) {
+    return {
+      id: l.id,
+      mercado: l.mercado || '',
+      criadoEm: l.criadoEm || 0,
+      atualizadoEm: carimbo(l),
+      apagado: !!l.apagado,
+      nota: notaParaNuvem(l.nota)
+    };
+  }
+
+  function juntarListas(locais, remotas) {
+    var mapa = new Map();
+    locais.forEach(function (l) { mapa.set(l.id, l); });
+    remotas.forEach(function (r) {
+      var l = mapa.get(r.id);
+      if (!l || carimbo(r) > carimbo(l)) {
+        // nunca descartar a foto local da nota por causa de um registro remoto sem ela
+        if (l && l.nota && l.nota.foto && r.nota && !r.nota.foto) r.nota.foto = l.nota.foto;
+        mapa.set(r.id, r);
+      }
+    });
+    return Array.from(mapa.values());
   }
 
   /* ---------------- fotos ---------------- */
@@ -233,6 +258,65 @@
     return fila.then(function () { return mudou; });
   }
 
+  /* A foto da nota fiscal mora dentro da lista, então tem o seu próprio par de sobe/desce.
+     Mesmo princípio do item: arquivo separado, enviado uma vez só. */
+  function caminhoDaNota(id) {
+    return PASTA_FOTOS + 'nota-' + String(id).replace(/[^a-zA-Z0-9_-]/g, '') + '.jpg';
+  }
+
+  function subirNotasPendentes(cfg, listas) {
+    var pendentes = listas.filter(function (l) {
+      return !l.apagado && l.nota && l.nota.foto && !l.nota.fotoArquivo;
+    });
+    if (!pendentes.length) return Promise.resolve();
+
+    var fila = Promise.resolve();
+    pendentes.forEach(function (l) {
+      fila = fila.then(function () {
+        var caminho = caminhoDaNota(l.id);
+        var comoBlob = l.nota.foto instanceof Blob
+          ? Promise.resolve(l.nota.foto)
+          : fetch(l.nota.foto).then(function (r) { return r.blob(); });
+
+        return comoBlob
+          .then(blobParaBase64)
+          .then(function (b64) {
+            return subirArquivo(cfg, caminho, b64, null, 'Nota fiscal');
+          })
+          .then(function () {
+            l.nota.fotoArquivo = caminho;
+            return Dados.gravarLista(l);
+          })
+          .catch(function (e) {
+            if (e && e.conflito) l.nota.fotoArquivo = caminho;
+          });
+      });
+    });
+    return fila;
+  }
+
+  function baixarNotasFaltando(cfg, listas) {
+    var faltando = listas.filter(function (l) {
+      return !l.apagado && l.nota && l.nota.fotoArquivo && !l.nota.foto;
+    });
+    if (!faltando.length) return Promise.resolve();
+
+    var fila = Promise.resolve();
+    faltando.forEach(function (l) {
+      fila = fila.then(function () {
+        return baixarArquivo(cfg, l.nota.fotoArquivo).then(function (r) {
+          if (r.ausente || !r.content) return;
+          var bruto = global.atob(String(r.content).replace(/\s/g, ''));
+          var bytes = new Uint8Array(bruto.length);
+          for (var i = 0; i < bruto.length; i++) bytes[i] = bruto.charCodeAt(i);
+          l.nota.foto = new Blob([bytes], { type: 'image/jpeg' });
+          return Dados.gravarLista(l);
+        }).catch(function () { /* sem a foto a nota ainda serve */ });
+      });
+    });
+    return fila;
+  }
+
   // Baixa a foto de um item que chegou do outro celular.
   function baixarFotosFaltando(cfg, itens) {
     var faltando = itens.filter(function (i) {
@@ -263,19 +347,21 @@
   /* ---------------- a sincronização em si ---------------- */
 
   function umaRodada(cfg) {
-    var locais, nota;
+    var locais, listasLocais;
 
-    return Promise.all([Dados.listar(), Dados.lerNota()]).then(function (r) {
+    return Promise.all([Dados.listar(), Dados.listarListas()]).then(function (r) {
       locais = r[0] || [];
-      nota = r[1] || null;
-      return subirFotosPendentes(cfg, locais);
+      return subirFotosPendentes(cfg, locais).then(function () {
+        return subirNotasPendentes(cfg, r[1] || []);
+      });
     }).then(function () {
-      return Promise.all([Dados.listar(), baixarArquivo(cfg, ARQUIVO)]);
+      return Promise.all([Dados.listar(), Dados.listarListas(), baixarArquivo(cfg, ARQUIVO)]);
     }).then(function (r) {
       locais = r[0] || [];
-      var arquivo = r[1];
+      listasLocais = r[1] || [];
+      var arquivo = r[2];
 
-      var remoto = { itens: [], nota: null };
+      var remoto = { itens: [], listas: [] };
       var sha = null;
 
       if (!arquivo.ausente && arquivo.content) {
@@ -283,12 +369,16 @@
         try {
           var lido = JSON.parse(deBase64(arquivo.content));
           remoto.itens = lido.itens || [];
-          remoto.nota = lido.nota || null;
+          remoto.listas = lido.listas || [];
+
+          /* Arquivo da versão 1 (antes das listas): tinha uma nota solta e itens sem
+             lista. Eles entram como estão — a migração local do app cuida de agrupar. */
+          if (!lido.listas && lido.nota) remoto.notaAntiga = lido.nota;
         } catch (e) { /* arquivo estragado: vale o que está no aparelho */ }
       }
 
       var juntos = juntarItens(locais, remoto.itens);
-      var notaFinal = juntarNota(nota, remoto.nota);
+      var listasFinais = juntarListas(listasLocais, remoto.listas);
 
       // grava no aparelho o que veio de fora
       var gravacoes = [];
@@ -304,25 +394,29 @@
         }
       });
 
-      if (notaFinal && notaFinal !== nota) {
-        if (nota && nota.foto && !notaFinal.foto) notaFinal.foto = nota.foto;
-        gravacoes.push(Dados.gravarNota(notaFinal));
-      }
+      var listaPorId = new Map();
+      listasLocais.forEach(function (l) { listaPorId.set(l.id, l); });
+      listasFinais.forEach(function (l) {
+        var atual = listaPorId.get(l.id);
+        if (!atual || carimbo(l) > carimbo(atual)) gravacoes.push(Dados.gravarLista(l));
+      });
 
       var corpo = {
-        versao: 1,
+        versao: 2,
         atualizadoEm: Date.now(),
-        itens: juntos.map(paraNuvem),
-        nota: notaParaNuvem(notaFinal)
+        listas: listasFinais.map(listaParaNuvem),
+        itens: juntos.map(paraNuvem)
       };
       var texto = JSON.stringify(corpo, null, 2) + '\n';
 
       return Promise.all(gravacoes).then(function () {
         return subirArquivo(cfg, ARQUIVO, paraBase64(texto), sha, 'Lista de compras');
       }).then(function () {
-        return Dados.listar();
+        return Promise.all([Dados.listar(), Dados.listarListas()]);
       }).then(function (finais) {
-        return baixarFotosFaltando(cfg, finais || []);
+        return baixarFotosFaltando(cfg, finais[0] || []).then(function () {
+          return baixarNotasFaltando(cfg, finais[1] || []);
+        });
       });
     });
   }

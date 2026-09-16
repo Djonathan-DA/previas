@@ -8,16 +8,81 @@
   var QUALIDADE = 0.72;    // compressão JPEG
 
   var CATEGORIAS = [
+    { id: 'hortifruti',  nome: 'Hortifruti',  emoji: '🥬' },
+    { id: 'carne',       nome: 'Carnes',      emoji: '🥩' },
     { id: 'alimentacao', nome: 'Alimentação', emoji: '🍚' },
+    { id: 'padaria',     nome: 'Padaria',     emoji: '🥖' },
+    { id: 'bebida',      nome: 'Bebidas',     emoji: '🥤' },
+    { id: 'lanche',      nome: 'Lanche',      emoji: '🍫' },
     { id: 'limpeza',     nome: 'Limpeza',     emoji: '🧽' },
     { id: 'higiene',     nome: 'Higiene',     emoji: '🧴' },
-    { id: 'lanche',      nome: 'Lanche',      emoji: '🍫' },
-    { id: 'bebida',      nome: 'Bebidas',     emoji: '🥤' },
     { id: 'casa',        nome: 'Casa',        emoji: '🏠' },
     { id: 'pet',         nome: 'Pet',         emoji: '🐾' },
     { id: 'outros',      nome: 'Outros',      emoji: '📦' }
   ];
   var CATEGORIA_PADRAO = 'outros';
+
+  /* Palavras que aparecem na descrição do cupom fiscal, para separar por categoria o que
+     foi lido da nota. É chute informado, não verdade: a tela deixa corrigir. Os termos
+     estão sem acento porque a comparação é feita sobre o texto já sem acentuação. */
+  var PALAVRAS = [
+    ['hortifruti', ['ALFACE', 'TOMATE', 'CEBOLA', 'ALHO', 'BATATA', 'CENOURA', 'BANANA',
+      'MACA', 'LARANJA', 'LIMAO', 'MAMAO', 'MELANCIA', 'MELAO', 'UVA', 'MANGA', 'ABACAXI',
+      'PERA', 'MORANGO', 'ABACATE', 'GOIABA', 'COUVE', 'REPOLHO', 'BROCOLIS', 'ABOBRINHA',
+      'ABOBORA', 'PEPINO', 'PIMENTAO', 'BETERRABA', 'CHUCHU', 'MANDIOCA', 'INHAME',
+      'SALSA', 'CHEIRO VERDE', 'RUCULA', 'AGRIAO', 'ESPINAFRE', 'VERDURA', 'LEGUME',
+      'FRUTA', 'HORTIFRUTI', 'COENTRO', 'MARACUJA', 'TANGERINA', 'BERINJELA', 'QUIABO']],
+    ['carne', ['CARNE', 'BOVIN', 'SUIN', 'FRANGO', 'PEITO', 'COXA', 'SOBRECOXA', 'ASA DE',
+      'PATINHO', 'ALCATRA', 'COXAO', 'ACEM', 'MUSCULO', 'FRALDINHA', 'PICANHA', 'MAMINHA',
+      'CONTRA FILE', 'CONTRAFILE', 'FILE', 'COSTELA', 'LINGUICA', 'BACON', 'PERNIL',
+      'LOMBO', 'CUPIM', 'MOIDA', 'MOIDO', 'PEIXE', 'TILAPIA', 'SALMAO', 'SARDINHA',
+      'CAMARAO', 'MERLUZA', 'PESCADA', 'BIFE', 'HAMBURGUER', 'SALSICHA', 'PRESUNTO',
+      'MORTADELA', 'SALAME', 'CALABRESA']],
+    ['padaria', ['PAO', 'PAES', 'BAGUETE', 'BISNAGA', 'BOLO', 'ROSCA', 'SONHO', 'CROISSANT',
+      'TORTA', 'PADARIA', 'FORMA INTEGRAL', 'BRIOCHE']],
+    ['bebida', ['REFRIGERANTE', 'REFRIG', 'COCA', 'GUARANA', 'FANTA', 'SPRITE', 'PEPSI',
+      'SUCO', 'AGUA', 'CERVEJA', 'VINHO', 'ENERGETICO', 'ISOTONIC', 'CHA GELADO',
+      'NECTAR', 'REFRESCO', 'WHISKY', 'VODKA', 'CACHACA', 'ESPUMANTE', 'TONICA']],
+    ['lanche', ['BISCOITO', 'BOLACHA', 'CHOCOLATE', 'BOMBOM', 'SALGADINHO', 'CHIPS',
+      'PIPOCA', 'BALA', 'CHICLETE', 'WAFER', 'DOCE', 'PACOCA', 'AMENDOIM', 'SORVETE',
+      'PIRULITO', 'BARRA DE CEREAL', 'TORRADA', 'RUFFLES', 'DORITOS', 'TRIDENT']],
+    ['limpeza', ['DETERGENTE', 'SABAO', 'AMACIANTE', 'DESINFET', 'AGUA SANIT', 'CANDIDA',
+      'CLORO', 'ALVEJANTE', 'LIMPADOR', 'MULTIUSO', 'VEJA', 'YPE', 'OMO', 'BRILHANTE',
+      'ESPONJA', 'PANO DE CHAO', 'VASSOURA', 'RODO', 'SACO DE LIXO', 'LUSTRA',
+      'DESENGORDUR', 'LIMPA VIDRO', 'AJAX', 'PINHO']],
+    ['higiene', ['SABONETE', 'SHAMPOO', 'XAMPU', 'CONDICIONADOR', 'CREME DENTAL',
+      'PASTA DE DENTE', 'ESCOVA DENTAL', 'FIO DENTAL', 'DESODORANTE', 'PAPEL HIGIENICO',
+      'ABSORVENTE', 'FRALDA', 'LENCO', 'ALGODAO', 'COTONETE', 'HIDRATANTE', 'BARBEAR',
+      'GILLETTE', 'ENXAGUANTE', 'LISTERINE', 'COLGATE', 'PROTETOR SOLAR', 'TALCO']],
+    ['pet', ['RACAO', 'PETISCO', 'GATO', 'CACHORRO', 'CAO ', 'PEDIGREE', 'WHISKAS',
+      'AREIA HIGIENICA', 'ANTIPULGAS', 'PET ']],
+    ['casa', ['PILHA', 'LAMPADA', 'GUARDANAPO', 'PAPEL TOALHA', 'PAPEL ALUMINIO',
+      'FILME PVC', 'FOSFORO', 'ISQUEIRO', 'VELA', 'COPO DESC', 'PRATO DESC', 'TALHER',
+      'POTE', 'CABIDE', 'INSETICIDA', 'NAFTALINA']],
+    ['alimentacao', ['ARROZ', 'FEIJAO', 'MACARRAO', 'ESPAGUETE', 'FARINHA', 'ACUCAR',
+      'SAL ', 'OLEO', 'AZEITE', 'VINAGRE', 'MOLHO', 'EXTRATO DE TOMATE', 'LEITE',
+      'IOGURTE', 'QUEIJO', 'MANTEIGA', 'MARGARINA', 'REQUEIJAO', 'OVO', 'CAFE',
+      'ACHOCOLATADO', 'NESCAU', 'TODDY', 'CEREAL', 'AVEIA', 'GRANOLA', 'MILHO',
+      'ERVILHA', 'ATUM', 'SARDINHA LATA', 'TEMPERO', 'CALDO', 'CATCHUP', 'KETCHUP',
+      'MAIONESE', 'MOSTARDA', 'GELATINA', 'PUDIM', 'CREME DE LEITE', 'LEITE CONDENSADO',
+      'FERMENTO', 'AMIDO', 'LASANHA', 'PIZZA', 'CONGELAD', 'TRIGO', 'POLVILHO']]
+  ];
+
+  function semAcento(texto) {
+    return String(texto).toUpperCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function adivinharCategoria(descricao) {
+    var alvo = semAcento(descricao);
+    for (var i = 0; i < PALAVRAS.length; i++) {
+      var grupo = PALAVRAS[i];
+      for (var j = 0; j < grupo[1].length; j++) {
+        if (alvo.indexOf(grupo[1][j]) !== -1) return grupo[0];
+      }
+    }
+    return CATEGORIA_PADRAO;
+  }
 
   function categoria(id) {
     for (var i = 0; i < CATEGORIAS.length; i++) {
@@ -28,8 +93,9 @@
 
   var $ = function (id) { return document.getElementById(id); };
 
-  var itens = [];
-  var nota = null;        // { foto, totalCent, quando }
+  var itens = [];         // TODOS os itens, de todas as listas
+  var listas = [];        // cada ida ao mercado: { id, mercado, criadoEm, nota, ... }
+  var listaAtivaId = null;
   var urls = new Map();   // id do item -> object URL da foto (para revogar depois)
   var rascunho = null;    // item em edição na ficha
 
@@ -47,8 +113,60 @@
     return digitos ? parseInt(digitos, 10) : 0;
   }
 
+  /* ---------------- listas (cada ida ao mercado) ---------------- */
+
+  function listaAtiva() {
+    for (var i = 0; i < listas.length; i++) {
+      if (listas[i].id === listaAtivaId) return listas[i];
+    }
+    return null;
+  }
+
+  var nota = null;   // atalho para a nota da lista ativa, mantido por sincronizarNota()
+
+  function sincronizarNota() {
+    var l = listaAtiva();
+    nota = l ? (l.nota || null) : null;
+  }
+
+  // Itens da lista aberta — é o que aparece na tela e entra nos totais.
+  function itensDaLista(id) {
+    var alvo = id || listaAtivaId;
+    return itens.filter(function (i) { return i.listaId === alvo; });
+  }
+
+  function totalDe(lista) {
+    return lista.reduce(function (s, i) { return s + i.precoCent * i.qtd; }, 0);
+  }
+
   function totalDaLista() {
-    return itens.reduce(function (s, i) { return s + i.precoCent * i.qtd; }, 0);
+    return totalDe(itensDaLista());
+  }
+
+  function novoId() {
+    return String(Date.now()) + Math.random().toString(16).slice(2, 8);
+  }
+
+  var DIA_MS = 24 * 60 * 60 * 1000;
+
+  function dataCurta(quando) {
+    var d = new Date(quando);
+    var hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    var dia = new Date(quando);
+    dia.setHours(0, 0, 0, 0);
+    var diff = Math.round((hoje - dia) / DIA_MS);
+
+    if (diff === 0) return 'Hoje';
+    if (diff === 1) return 'Ontem';
+    return String(d.getDate()).padStart(2, '0') + '/' +
+           String(d.getMonth() + 1).padStart(2, '0') +
+           (d.getFullYear() !== new Date().getFullYear() ? '/' + d.getFullYear() : '');
+  }
+
+  function nomeDaLista(l) {
+    if (!l) return 'Compras';
+    return dataCurta(l.criadoEm) + (l.mercado ? ' · ' + l.mercado : '');
   }
 
   /* ---------------- avisos ---------------- */
@@ -254,12 +372,24 @@
 
       cfg.foto.paraLeitura().then(function (arquivo) {
         if (!arquivo) throw new Error('sem foto');
-        var ler = cfg.tipo === 'nota' ? Leitor.totalDaNota : Leitor.precosNaEtiqueta;
+        var ler = cfg.tipo === 'nota' ? Leitor.analisarNota : Leitor.precosNaEtiqueta;
         return ler(arquivo, function (passo, progresso) {
           var nome = ESTADOS[passo] || 'Lendo a foto';
           mostrarEstado(nome + '… ' + Math.round(progresso * 100) + '%');
         });
-      }).then(function (achados) {
+      }).then(function (saida) {
+        // A nota devolve a análise inteira; a etiqueta, só a lista de preços prováveis.
+        if (cfg.tipo === 'nota') {
+          var achou = cfg.aoAnalisar(saida);
+          mostrarEstado(achou || 'Não consegui ler a nota. Preencha abaixo.');
+          desenharOpcoes(saida.candidatosTotal || []);
+          if (cfg.campo) {
+            setTimeout(function () { $(cfg.campo).scrollIntoView({ block: 'nearest' }); }, 80);
+          }
+          return;
+        }
+
+        var achados = saida;
         if (!achados.length) {
           mostrarEstado(cfg.tipo === 'nota'
             ? 'Não achei o total na foto. Digite abaixo.'
@@ -401,15 +531,18 @@
     }
 
     var novo = !rascunho.id;
-    if (novo) {
-      rascunho.id = String(Date.now()) + Math.random().toString(16).slice(2, 8);
-      rascunho.criadoEm = Date.now();
-    }
     // carimbo de alteração: é por ele que a nuvem decide quem mexeu por último
     rascunho.atualizadoEm = Date.now();
 
     var paraGravar = rascunho;
-    Dados.gravar(paraGravar).then(function () {
+    garantirLista().then(function () {
+      if (novo) {
+        paraGravar.id = novoId();
+        paraGravar.criadoEm = Date.now();
+        paraGravar.listaId = listaAtivaId;   // o item nasce na lista que está aberta
+      }
+      return Dados.gravar(paraGravar);
+    }).then(function () {
       var i = itens.findIndex(function (x) { return x.id === paraGravar.id; });
       if (i >= 0) {
         soltarUrl(urls.get(paraGravar.id), itens[i].foto);
@@ -491,17 +624,24 @@
   function desenhar() {
     itens.sort(function (a, b) { return (b.criadoEm || 0) - (a.criadoEm || 0); });
 
+    var visiveis = itensDaLista();
+
     elLista.textContent = '';
-    itens.forEach(function (item) { elLista.appendChild(linha(item)); });
-    elVazio.hidden = itens.length > 0;
+    visiveis.forEach(function (item) { elLista.appendChild(linha(item)); });
+    elVazio.hidden = visiveis.length > 0;
 
-    var pecas = itens.reduce(function (s, i) { return s + i.qtd; }, 0);
-    var pegos = itens.filter(function (i) { return i.marcado; }).length;
+    var pecas = visiveis.reduce(function (s, i) { return s + i.qtd; }, 0);
+    var pegos = visiveis.filter(function (i) { return i.marcado; }).length;
 
-    elTotal.textContent = emReais(totalDaLista());
-    elResumo.textContent = itens.length
+    elTotal.textContent = emReais(totalDe(visiveis));
+    elResumo.textContent = visiveis.length
       ? pecas + (pecas > 1 ? ' itens' : ' item') + (pegos ? ' · ' + pegos + ' no carrinho' : '')
       : 'nenhum item';
+
+    var l = listaAtiva();
+    elNomeLista.textContent = nomeDaLista(l);
+    elSubLista.textContent = l && l.nota && l.nota.totalCent
+      ? 'nota conferida' : 'toque para trocar de lista';
   }
 
   /* Apagar não some com o registro: deixa uma lápide (`apagado: true`) no lugar.
@@ -515,7 +655,8 @@
       atualizadoEm: Date.now(),
       apagado: true,
       nome: '', precoCent: 0, qtd: 1, marcado: false,
-      categoria: CATEGORIA_PADRAO, foto: null, fotoArquivo: null
+      categoria: CATEGORIA_PADRAO, foto: null, fotoArquivo: null,
+      listaId: item.listaId || null
     };
     return Dados.gravar(lapide).then(function () {
       soltarUrl(urls.get(item.id), item.foto);
@@ -562,7 +703,7 @@
 
   function porCategoria() {
     var mapa = new Map();
-    itens.forEach(function (i) {
+    itensDaLista().forEach(function (i) {
       var cat = categoria(i.categoria);
       var linha = mapa.get(cat.id) || { cat: cat, pecas: 0, produtos: 0, valorCent: 0 };
       linha.pecas += i.qtd;
@@ -573,6 +714,61 @@
     return Array.from(mapa.values()).sort(function (a, b) {
       return b.valorCent - a.valorCent;
     });
+  }
+
+  /* Os produtos lidos do cupom, agrupados pela categoria adivinhada pela descrição. */
+  function categoriasDaNota(n) {
+    var mapa = new Map();
+    (n.produtos || []).forEach(function (p) {
+      var cat = categoria(p.categoria || adivinharCategoria(p.descricao));
+      var linha = mapa.get(cat.id) || { cat: cat, qtd: 0, valorCent: 0 };
+      linha.qtd += 1;
+      linha.valorCent += p.valorCent || 0;
+      mapa.set(cat.id, linha);
+    });
+    return Array.from(mapa.values()).sort(function (a, b) {
+      return b.valorCent - a.valorCent;
+    });
+  }
+
+  function linhaValor(rotulo, valor, classe) {
+    return '<div class="conferencia-linha' + (classe ? ' ' + classe : '') + '">' +
+      '<span>' + rotulo + '</span><strong>' + valor + '</strong></div>';
+  }
+
+  // O quadro da nota: o que o cupom disse, não o que a lista somou.
+  function blocoNota(n) {
+    var html = '<div class="conferencia-bloco nota">';
+
+    if (n.qtdItens) html += linhaValor('Itens comprados', String(n.qtdItens));
+    if (n.totalCent) html += linhaValor('Total da nota', emReais(n.totalCent));
+    if (n.descontoCent) html += linhaValor('Desconto', '− ' + emReais(n.descontoCent), 'desconto');
+    if (n.pagoCent) html += linhaValor('Você pagou', emReais(n.pagoCent), 'destaque');
+
+    html += '</div>';
+
+    var grupos = categoriasDaNota(n);
+    if (grupos.length) {
+      var somaCat = grupos.reduce(function (s, g) { return s + g.valorCent; }, 0) || 1;
+      html += '<h3 class="resumo-titulo">Itens da nota por categoria</h3><ul class="resumo-lista">';
+      grupos.forEach(function (g) {
+        var fatia = Math.round((g.valorCent / somaCat) * 100);
+        html += '<li class="resumo-item">' +
+          '<div class="resumo-item-topo">' +
+            '<span class="resumo-item-nome">' + g.cat.emoji + ' ' + textoSeguro(g.cat.nome) + '</span>' +
+            '<span class="resumo-item-valor">' + emReais(g.valorCent) + '</span>' +
+          '</div>' +
+          '<div class="resumo-barra"><span style="width:' + fatia + '%"></span></div>' +
+          '<div class="resumo-item-baixo">' +
+            '<span>' + g.qtd + (g.qtd > 1 ? ' itens' : ' item') + '</span>' +
+            '<span>' + fatia + '% da nota</span>' +
+          '</div>' +
+        '</li>';
+      });
+      html += '</ul><p class="dica">Categorias adivinhadas pelo nome do produto no cupom — ' +
+              'pode escapar alguma.</p>';
+    }
+    return html;
   }
 
   function blocoConferencia(totalNotaCent) {
@@ -597,8 +793,9 @@
 
   function abrirResumo() {
     var total = totalDaLista();
-    var pecas = itens.reduce(function (s, i) { return s + i.qtd; }, 0);
-    var pegos = itens.reduce(function (s, i) { return s + (i.marcado ? i.qtd : 0); }, 0);
+    var visiveis = itensDaLista();
+    var pecas = visiveis.reduce(function (s, i) { return s + i.qtd; }, 0);
+    var pegos = visiveis.reduce(function (s, i) { return s + (i.marcado ? i.qtd : 0); }, 0);
 
     var html =
       '<div class="resumo-cabeca">' +
@@ -629,8 +826,9 @@
       html += '</ul>';
     }
 
-    if (nota && nota.totalCent) {
-      html += '<h3 class="resumo-titulo">Conferência da nota</h3>' + blocoConferencia(nota.totalCent);
+    if (nota && (nota.totalCent || (nota.produtos && nota.produtos.length))) {
+      html += '<h3 class="resumo-titulo">Nota fiscal</h3>' + blocoNota(nota) +
+              blocoConferencia(nota.pagoCent || nota.totalCent);
     }
 
     elResumoCorpo.innerHTML = html;
@@ -641,6 +839,10 @@
 
   var elNotaDlg = $('nota-dlg');
   var elNotaTotal = $('nota-total');
+  var elNotaDesconto = $('nota-desconto');
+  var elNotaPago = $('nota-pago');
+  var elNotaQtd = $('nota-qtd');
+  var elNotaMercado = $('nota-mercado');
   var elNotaConferencia = $('nota-conferencia');
   var elNotaApagar = $('nota-apagar');
 
@@ -659,19 +861,67 @@
     aoEscolher: function (centavos) {
       elNotaTotal.value = emReais(centavos);
       atualizarConferencia();
+    },
+    // Recebe a análise inteira do cupom e preenche a tela. Devolve o recado do estado.
+    aoAnalisar: function (r) {
+      if (!r || (!r.totalCent && !r.produtos.length)) return null;
+
+      if (r.totalCent) elNotaTotal.value = emReais(r.totalCent);
+      if (r.descontoCent) elNotaDesconto.value = emReais(r.descontoCent);
+      if (r.pagoCent) elNotaPago.value = emReais(r.pagoCent);
+      if (r.qtdItens) elNotaQtd.value = String(r.qtdItens);
+
+      produtosLidos = (r.produtos || []).map(function (p) {
+        return {
+          descricao: p.descricao,
+          valorCent: p.valorCent,
+          categoria: adivinharCategoria(p.descricao)
+        };
+      });
+      atualizarConferencia();
+
+      var partes = [];
+      if (r.qtdItens) partes.push(r.qtdItens + (r.qtdItens > 1 ? ' itens' : ' item'));
+      if (r.totalCent) partes.push('total ' + emReais(r.totalCent));
+      if (r.descontoCent) partes.push('desconto ' + emReais(r.descontoCent));
+      if (!partes.length) return null;
+
+      return 'Li da nota: ' + partes.join(', ') + '. Confira e corrija o que precisar.';
     }
   });
 
+  var produtosLidos = [];   // o que a última leitura achou, até salvar
+
   function atualizarConferencia() {
     var totalNota = centavosDoTexto(elNotaTotal.value);
-    elNotaConferencia.innerHTML = totalNota
-      ? blocoConferencia(totalNota)
+    var desconto = centavosDoTexto(elNotaDesconto.value);
+    var pago = centavosDoTexto(elNotaPago.value);
+    var referencia = pago || totalNota;
+
+    var html = '';
+    if (produtosLidos.length) {
+      html += blocoNota({
+        qtdItens: parseInt(elNotaQtd.value, 10) || produtosLidos.length,
+        totalCent: totalNota, descontoCent: desconto, pagoCent: pago,
+        produtos: produtosLidos
+      });
+    }
+    html += referencia
+      ? blocoConferencia(referencia)
       : '<p class="dica">Coloque o total da nota para eu comparar com a sua lista.</p>';
+
+    elNotaConferencia.innerHTML = html;
   }
 
   function abrirNota() {
+    var l = listaAtiva();
     fotoNota.definir(nota ? nota.foto : null);
+    elNotaMercado.value = l ? (l.mercado || '') : '';
     elNotaTotal.value = emReais(nota ? nota.totalCent : 0);
+    elNotaDesconto.value = emReais(nota ? nota.descontoCent : 0);
+    elNotaPago.value = emReais(nota ? nota.pagoCent : 0);
+    elNotaQtd.value = nota && nota.qtdItens ? String(nota.qtdItens) : '';
+    produtosLidos = (nota && nota.produtos) ? nota.produtos.slice() : [];
     elNotaApagar.hidden = !nota;
     leitorNota.esconder();
     leitorNota.atualizar();
@@ -683,6 +933,9 @@
     evento.preventDefault();
 
     var totalCent = centavosDoTexto(elNotaTotal.value);
+    var descontoCent = centavosDoTexto(elNotaDesconto.value);
+    var pagoCent = centavosDoTexto(elNotaPago.value) ||
+                   Math.max(0, totalCent - descontoCent);
     var foto = fotoNota.obter();
 
     if (!totalCent && !foto) {
@@ -690,18 +943,18 @@
       return;
     }
 
-    var nova = {
-      foto: foto, totalCent: totalCent,
-      quando: Date.now(), atualizadoEm: Date.now(),
-      fotoArquivo: null
-    };
-    Dados.gravarNota(nova).then(function () {
-      nota = nova;
+    garantirLista().then(function (l) {
+      l.mercado = elNotaMercado.value.trim();
+      l.nota = montarNota(foto, totalCent, descontoCent, pagoCent);
+      return salvarListaAtiva();
+    }).then(function () {
+      sincronizarNota();
       fotoNota.soltar();
       if (elNotaDlg.open) elNotaDlg.close();
+      desenhar();
       Nuvem.agendar();
-      var dif = totalCent - totalDaLista();
-      avisar(!totalCent ? 'Nota guardada.'
+      var dif = pagoCent - totalDaLista();
+      avisar(!pagoCent ? 'Nota guardada.'
         : dif === 0 ? 'Nota guardada — bateu certinho.'
         : 'Nota guardada — diferença de ' + emReais(Math.abs(dif)) + '.');
     }).catch(function () {
@@ -709,16 +962,163 @@
     });
   }
 
+  function montarNota(foto, totalCent, descontoCent, pagoCent) {
+    return {
+      foto: foto,
+      fotoArquivo: (nota && nota.foto === foto) ? (nota.fotoArquivo || null) : null,
+      totalCent: totalCent,
+      descontoCent: descontoCent,
+      pagoCent: pagoCent,
+      qtdItens: parseInt(elNotaQtd.value, 10) || produtosLidos.length || null,
+      produtos: produtosLidos.map(function (p) {
+        return {
+          descricao: p.descricao,
+          valorCent: p.valorCent,
+          categoria: p.categoria || adivinharCategoria(p.descricao)
+        };
+      }),
+      quando: Date.now(),
+      atualizadoEm: Date.now()
+    };
+  }
+
   function apagarNota() {
-    if (!window.confirm('Apagar a nota fiscal guardada?')) return;
-    Dados.gravarNota(null).then(function () {
-      nota = null;
+    if (!window.confirm('Apagar a nota fiscal desta lista?')) return;
+    var l = listaAtiva();
+    if (!l) return;
+    l.nota = null;
+    salvarListaAtiva().then(function () {
+      sincronizarNota();
+      produtosLidos = [];
       fotoNota.definir(null);
       elNotaTotal.value = emReais(0);
+      elNotaDesconto.value = emReais(0);
+      elNotaPago.value = emReais(0);
+      elNotaQtd.value = '';
       elNotaApagar.hidden = true;
       atualizarConferencia();
+      desenhar();
+      Nuvem.agendar();
       avisar('Nota apagada.');
     });
+  }
+
+  /* ---------------- listas: trocar, criar, apagar ---------------- */
+
+  var elListasDlg = $('listas-dlg');
+  var elListasCorpo = $('listas-corpo');
+  var elNovoMercado = $('novo-mercado');
+  var elNomeLista = $('nome-lista');
+  var elSubLista = $('sub-lista');
+
+  function abrirListas() {
+    var l = listaAtiva();
+    elNovoMercado.value = l ? (l.mercado || '') : '';
+    desenharListas();
+    elListasDlg.showModal();
+  }
+
+  function desenharListas() {
+    listas.sort(function (a, b) { return (b.criadoEm || 0) - (a.criadoEm || 0); });
+
+    var html = '<ul class="listas">';
+    listas.forEach(function (l) {
+      var dela = itens.filter(function (i) { return i.listaId === l.id; });
+      var pecas = dela.reduce(function (s, i) { return s + i.qtd; }, 0);
+      var total = totalDe(dela);
+      var temNota = l.nota && (l.nota.pagoCent || l.nota.totalCent);
+
+      html += '<li class="lista-linha' + (l.id === listaAtivaId ? ' ativa' : '') + '" data-id="' +
+          textoSeguro(l.id) + '">' +
+        '<button type="button" class="lista-abrir" data-acao="abrir">' +
+          '<span class="lista-nome">' + textoSeguro(nomeDaLista(l)) + '</span>' +
+          '<span class="lista-detalhe">' + pecas + (pecas === 1 ? ' item' : ' itens') +
+            ' · ' + emReais(total) +
+            (temNota ? ' · 🧾 nota ' + emReais(l.nota.pagoCent || l.nota.totalCent) : '') +
+          '</span>' +
+        '</button>' +
+        '<button type="button" class="icone lista-apagar" data-acao="apagar" ' +
+          'aria-label="Apagar esta lista">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONE_LIXO + '"/></svg>' +
+        '</button>' +
+      '</li>';
+    });
+    html += '</ul>';
+
+    elListasCorpo.innerHTML = html;
+  }
+
+  function trocarLista(id) {
+    if (id === listaAtivaId) { elListasDlg.close(); return; }
+    listaAtivaId = id;
+    Dados.gravarCfg('listaAtiva', id).then(function () {
+      sincronizarNota();
+      desenhar();
+      elListasDlg.close();
+      avisar('Abriu ' + nomeDaLista(listaAtiva()) + '.');
+    });
+  }
+
+  function apagarLista(id) {
+    var l = listas.find(function (x) { return x.id === id; });
+    if (!l) return;
+    var dela = itens.filter(function (i) { return i.listaId === id; });
+    if (!window.confirm('Apagar "' + nomeDaLista(l) + '" e os ' + dela.length +
+                        ' itens dela? Isso não volta.')) return;
+
+    // lápide na lista e em cada item, para a exclusão viajar para o outro celular
+    l.apagado = true;
+    l.atualizadoEm = Date.now();
+    l.nota = null;
+
+    Promise.all([Dados.gravarLista(l)].concat(dela.map(apagarItem))).then(function () {
+      listas = listas.filter(function (x) { return x.id !== id; });
+      if (listaAtivaId === id) {
+        listaAtivaId = listas.length ? listas[0].id : null;
+        return Dados.gravarCfg('listaAtiva', listaAtivaId);
+      }
+    }).then(function () {
+      sincronizarNota();
+      desenhar();
+      desenharListas();
+      Nuvem.agendar(1500);
+      avisar('Lista apagada.');
+    });
+  }
+
+  function novaLista(evento) {
+    evento.preventDefault();
+    var mercado = elNovoMercado.value.trim();
+
+    criarLista(mercado, Date.now()).then(function () {
+      sincronizarNota();
+      desenhar();
+      elListasDlg.close();
+      Nuvem.agendar();
+      avisar('Lista nova aberta.');
+    });
+  }
+
+  // Salvar o mercado sem criar lista: renomeia a que está aberta.
+  function salvarMercado() {
+    var l = listaAtiva();
+    if (!l) return;
+    l.mercado = elNovoMercado.value.trim();
+    salvarListaAtiva().then(function () {
+      desenhar();
+      elListasDlg.close();   // sem fechar, a tela fica por cima e trava o próximo toque
+      Nuvem.agendar();
+      avisar('Mercado salvo.');
+    });
+  }
+
+  function aoClicarNasListas(evento) {
+    var alvo = evento.target.closest('[data-acao]');
+    var linha = evento.target.closest('.lista-linha');
+    if (!alvo || !linha) return;
+
+    if (alvo.dataset.acao === 'abrir') trocarLista(linha.dataset.id);
+    else if (alvo.dataset.acao === 'apagar') apagarLista(linha.dataset.id);
   }
 
   /* ---------------- sincronização ---------------- */
@@ -833,8 +1233,8 @@
   /* ---------------- compartilhar / limpar ---------------- */
 
   function textoDaLista() {
-    var linhas = ['🛒 Compras'];
-    itens.slice().reverse().forEach(function (i) {
+    var linhas = ['🛒 Compras — ' + nomeDaLista(listaAtiva())];
+    itensDaLista().slice().reverse().forEach(function (i) {
       var cat = categoria(i.categoria);
       var qtd = i.qtd > 1 ? ' (' + i.qtd + 'x)' : '';
       linhas.push((i.marcado ? '✅ ' : '• ') + cat.emoji + ' ' +
@@ -858,7 +1258,7 @@
   }
 
   function compartilhar() {
-    if (!itens.length) { avisar('A lista está vazia.'); return; }
+    if (!itensDaLista().length) { avisar('A lista está vazia.'); return; }
     var texto = textoDaLista();
 
     if (navigator.share) {
@@ -875,11 +1275,13 @@
   }
 
   function limpar() {
-    if (!itens.length) { avisar('A lista já está vazia.'); return; }
-    if (!window.confirm('Apagar todos os ' + itens.length + ' itens da lista?')) return;
+    var alvo = itensDaLista();
+    if (!alvo.length) { avisar('A lista já está vazia.'); return; }
+    if (!window.confirm('Apagar os ' + alvo.length + ' itens de "' +
+                        nomeDaLista(listaAtiva()) + '"?')) return;
 
     // um a um, virando lápide, para a limpeza chegar também ao outro celular
-    Promise.all(itens.slice().map(apagarItem)).then(function () {
+    Promise.all(alvo.map(apagarItem)).then(function () {
       desenhar();
       Nuvem.agendar(1500);
       avisar('Lista limpa.');
@@ -930,6 +1332,21 @@
     atualizarConferencia();
   });
 
+  $('btn-listas').addEventListener('click', abrirListas);
+  $('listas-fechar').addEventListener('click', function () { elListasDlg.close(); });
+  $('form-nova-lista').addEventListener('submit', novaLista);
+  $('btn-salvar-mercado').addEventListener('click', salvarMercado);
+  elListasCorpo.addEventListener('click', aoClicarNasListas);
+
+  elNotaTotal.addEventListener('input', atualizarConferencia);
+  [elNotaDesconto, elNotaPago].forEach(function (campo) {
+    campo.addEventListener('input', function () {
+      campo.value = emReais(centavosDoTexto(campo.value));
+      atualizarConferencia();
+    });
+  });
+  elNotaQtd.addEventListener('input', atualizarConferencia);
+
   $('btn-nuvem').addEventListener('click', abrirNuvem);
   $('form-nuvem').addEventListener('submit', conectarNuvem);
   $('nuvem-fechar').addEventListener('click', function () { elNuvemDlg.close(); });
@@ -960,15 +1377,86 @@
           categoria: i.categoria || CATEGORIA_PADRAO,
           criadoEm: i.criadoEm || 0,
           atualizadoEm: i.atualizadoEm || i.criadoEm || 0,
+          listaId: i.listaId || null,
           fotoArquivo: i.fotoArquivo || null,
           foto: i.foto || null
         };
       });
+      return Promise.all([Dados.listarListas(), Dados.lerCfg('listaAtiva')]);
+    }).then(function (r) {
+      listas = (r[0] || []).filter(function (l) { return !l.apagado; });
+      listaAtivaId = r[1] || null;
+      return migrar();
+    }).then(function () {
+      listas.sort(function (a, b) { return (b.criadoEm || 0) - (a.criadoEm || 0); });
+
+      // lista ativa sumiu (apagada aqui ou no outro celular)? cai na mais recente
+      if (!listaAtiva()) {
+        listaAtivaId = listas.length ? listas[0].id : null;
+        if (listaAtivaId) Dados.gravarCfg('listaAtiva', listaAtivaId);
+      }
+      sincronizarNota();
       desenhar();
-      return Dados.lerNota();
-    }).then(function (guardada) {
-      nota = guardada || null;
     });
+  }
+
+  /* Migração da versão sem listas. Quem já usava o app tem itens soltos e uma nota
+     guardada fora de qualquer lista: tudo isso vira a primeira lista, com a data do
+     item mais antigo. Roda uma vez só — depois não há mais item sem `listaId`. */
+  function migrar() {
+    var orfaos = itens.filter(function (i) { return !i.listaId; });
+
+    return Dados.lerNotaAntiga().then(function (notaAntiga) {
+      /* Aparelho sem nada não ganha lista aqui, de propósito. Se cada celular criasse a
+         sua lista vazia ao abrir, as duas nunca virariam a mesma: o celular dela ficaria
+         preso na lista vazia dela mesmo depois de receber tudo o que ele criou. Sem lista
+         nenhuma, a sincronização entrega as listas dele e o app abre a mais recente — e
+         quem começa do zero ganha a lista no primeiro item que adicionar. */
+      if (!orfaos.length && !notaAntiga) return null;
+
+      var maisAntigo = orfaos.reduce(function (m, i) {
+        return Math.min(m, i.criadoEm || Date.now());
+      }, Date.now());
+
+      return criarLista('', maisAntigo, notaAntiga || null).then(function (l) {
+        var gravacoes = orfaos.map(function (i) {
+          i.listaId = l.id;
+          i.atualizadoEm = Date.now();
+          return Dados.gravar(i);
+        });
+        return Promise.all(gravacoes).then(function () {
+          return notaAntiga ? Dados.apagarNotaAntiga() : null;
+        });
+      });
+    });
+  }
+
+  function criarLista(mercado, quando, notaInicial) {
+    var l = {
+      id: novoId(),
+      mercado: mercado || '',
+      criadoEm: quando || Date.now(),
+      atualizadoEm: Date.now(),
+      apagado: false,
+      nota: notaInicial || null
+    };
+    listas.push(l);
+    listaAtivaId = l.id;
+    return Dados.gravarLista(l).then(function () {
+      return Dados.gravarCfg('listaAtiva', l.id);
+    }).then(function () { return l; });
+  }
+
+  // A lista nasce quando há o que guardar nela, não quando o app abre.
+  function garantirLista() {
+    return listaAtiva() ? Promise.resolve(listaAtiva()) : criarLista('', Date.now());
+  }
+
+  function salvarListaAtiva() {
+    var l = listaAtiva();
+    if (!l) return Promise.resolve();
+    l.atualizadoEm = Date.now();
+    return Dados.gravarLista(l);
   }
 
   // Redesenha a tela com o que a sincronização trouxe do outro celular.

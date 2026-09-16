@@ -124,6 +124,39 @@
 
   var PRECO = /(?:r\s*\$\s*)?(\d{1,4})\s*[.,]\s*(\d{2})(?!\d)/gi;
 
+  /* Linhas de um cupom fiscal que NÃO são produto. Sem esta lista, o CNPJ, o total e o
+     troco entrariam na contagem de itens e bagunçariam tudo. */
+  var NAO_E_PRODUTO = new RegExp([
+    'TOTAL', 'SUBTOTAL', 'DESCONT', 'ABATIMENT', 'ACRESCIM', 'TROCO', 'DINHEIRO',
+    'CART[AÃ]O', 'CR[EÉ]DITO', 'D[EÉ]BITO', '\\bPIX\\b', 'VALOR\\s*PAGO', 'A\\s*PAGAR',
+    'CNPJ', '\\bCPF\\b', '\\bIE\\b', 'CUPOM', 'FISCAL', 'EXTRATO', 'SAT\\b', 'NFC',
+    'CHAVE', 'CONSULTE', 'CONSUMIDOR', 'TRIBUT', 'IMPOSTO', 'LEI\\s*12', 'OPERADOR',
+    'CAIXA', 'TERMINAL', 'DOCUMENTO', 'AUTORIZA', 'PROTOCOLO', 'EMISS[AÃ]O',
+    'QTD', 'QUANT', 'ITENS', 'TELEFONE', 'ENDERECO', 'ENDEREÇO', 'RUA\\b', 'AV\\b',
+    'OBRIGADO', 'VOLTE\\s*SEMPRE', 'TROCA'
+  ].join('|'));
+
+  function valorNaLinha(texto) {
+    var ultimo = null;
+    var m;
+    PRECO.lastIndex = 0;
+    while ((m = PRECO.exec(texto)) !== null) {
+      ultimo = centavosDe(m[1], m[2]);   // no cupom o valor da linha é o último da direita
+    }
+    return ultimo;
+  }
+
+  function primeiroValor(linhas, padrao) {
+    for (var i = 0; i < linhas.length; i++) {
+      var t = (linhas[i].text || '').toUpperCase();
+      if (padrao.test(t)) {
+        var v = valorNaLinha(t);
+        if (v !== null) return v;
+      }
+    }
+    return null;
+  }
+
   function centavosDe(inteiro, decimal) {
     return parseInt(inteiro, 10) * 100 + parseInt(decimal, 10);
   }
@@ -210,10 +243,12 @@
   }
 
   // Uma segunda passada com o outro modo custa tempo só quando a primeira não achou nada.
-  function reconhecerComReserva(arquivo, modo, reserva, aoProgredir, extrair) {
+  // `vazio` decide o que é "não achou": lista sem itens, ou análise sem total.
+  function reconhecerComReserva(arquivo, modo, reserva, aoProgredir, extrair, vazio) {
+    var semNada = vazio || function (r) { return !r || !r.length; };
     return reconhecer(arquivo, modo, aoProgredir).then(function (dados) {
       var achados = extrair(dados);
-      if (achados.length) return achados;
+      if (!semNada(achados)) return achados;
       return reconhecer(arquivo, reserva, aoProgredir).then(extrair);
     });
   }
@@ -283,6 +318,87 @@
         }).sort(function (a, b) {
           return b.nota - a.nota;
         }).slice(0, 4);
+      });
+    },
+
+    /* Leitura completa do cupom: quantos itens, total, desconto, quanto foi pago e a
+       lista de produtos com o valor de cada um. Tudo isto é SUGESTÃO conferível — a
+       tela mostra o que saiu daqui e deixa corrigir à mão. */
+    analisarNota: function (arquivo, aoProgredir) {
+      return reconhecerComReserva(arquivo, BLOCO, AUTOMATICO, aoProgredir, function (dados) {
+        var linhas = linhasDe(dados);
+
+        var totais = [];
+        linhas.forEach(function (l) {
+          var texto = (l.text || '').toUpperCase();
+          var ehTotal = /\bTOTAL\b/.test(texto) &&
+                        !/SUBTOTAL|TOTAL\s*(DE\s*)?(ITENS|ITEM|QTD)/.test(texto);
+          var ehPagamento = /TROCO|DINHEIRO|RECEBIDO|CART[AÃ]O|CR[EÉ]DITO|D[EÉ]BITO|\bPIX\b/.test(texto);
+          valoresDaLinha(l).forEach(function (v) {
+            v.ehTotal = ehTotal;
+            v.ehPagamento = ehPagamento;
+            totais.push(v);
+          });
+        });
+
+        var maior = totais.reduce(function (m, v) { return Math.max(m, v.centavos); }, 0) || 1;
+        var candidatos = juntarIguais(totais).map(function (v) {
+          v.nota = (v.ehTotal ? 1000 : 0) - (v.ehPagamento ? 500 : 0) +
+                   (v.centavos / maior) * 100;
+          return v;
+        }).sort(function (a, b) { return b.nota - a.nota; });
+
+        var totalCent = candidatos.length ? candidatos[0].centavos : null;
+        var descontoCent = primeiroValor(linhas, /DESCONT|ABATIMENT/);
+        var pagoCent = primeiroValor(linhas, /VALOR\s*PAGO|VALOR\s*A\s*PAGAR|TOTAL\s*A\s*PAGAR/);
+
+        // Sem linha de "valor a pagar", o pago é o total menos o desconto.
+        if (pagoCent === null && totalCent !== null) {
+          pagoCent = descontoCent ? Math.max(0, totalCent - descontoCent) : totalCent;
+        }
+
+        // Quantidade declarada pelo próprio cupom vale mais que a minha contagem.
+        var qtdDeclarada = null;
+        linhas.forEach(function (l) {
+          var t = (l.text || '').toUpperCase();
+          if (qtdDeclarada === null && /(QTD|QUANT)[^\n]{0,24}ITEN?S?/.test(t)) {
+            var m = t.match(/(\d{1,3})\s*$/) || t.match(/ITEN?S?[^\d]{0,10}(\d{1,3})/);
+            if (m) qtdDeclarada = parseInt(m[1], 10);
+          }
+        });
+
+        var produtos = [];
+        linhas.forEach(function (l) {
+          var texto = (l.text || '').replace(/\s+/g, ' ').trim();
+          if (!texto || NAO_E_PRODUTO.test(texto.toUpperCase())) return;
+
+          var valor = valorNaLinha(texto);
+          if (valor === null || valor <= 0) return;
+
+          // descrição = o que sobra tirando códigos, quantidades e o próprio valor
+          var descricao = texto
+            .replace(PRECO, ' ')
+            .replace(/\b\d{6,}\b/g, ' ')
+            .replace(/\b\d{1,3}\s*(UN|KG|G|L|ML|PC|CX|PT|X)\b/gi, ' ')
+            .replace(/^[\s\d.\-*]+/, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+          if (descricao.replace(/[^A-Za-zÀ-ÿ]/g, '').length < 3) return;
+          produtos.push({ descricao: descricao, valorCent: valor });
+        });
+
+        return {
+          totalCent: totalCent,
+          descontoCent: descontoCent,
+          pagoCent: pagoCent,
+          qtdItens: qtdDeclarada !== null ? qtdDeclarada : (produtos.length || null),
+          qtdContada: produtos.length,
+          produtos: produtos,
+          candidatosTotal: candidatos.slice(0, 4)
+        };
+      }, function (r) {
+        return !r || (r.totalCent === null && !r.produtos.length);
       });
     }
   };

@@ -16,10 +16,13 @@
 <body>
 
 <header class="topo">
-  <div class="topo-marca">
+  <button type="button" id="btn-listas" class="topo-marca" aria-label="Trocar de lista">
     <img src="assets/icon-192.png" alt="" width="32" height="32" />
-    <h1>Compras</h1>
-  </div>
+    <span class="topo-titulo">
+      <strong id="nome-lista">Compras</strong>
+      <small id="sub-lista">toque para trocar de lista</small>
+    </span>
+  </button>
   <div class="topo-acoes">
     <button type="button" id="btn-nuvem" class="icone icone-nuvem" data-situacao="desligada"
             title="Sincronização" aria-label="Sincronização com o GitHub">
@@ -162,8 +165,14 @@
     </div>
 
     <div class="folha-corpo">
-      <p class="dica">Tire a foto da nota depois de passar no caixa para conferir se o
-        total bate com o que você foi somando.</p>
+      <p class="dica">Tire a foto da nota depois de passar no caixa. Eu leio os itens, o
+        total, o desconto e quanto você pagou, e comparo com o que foi somando.</p>
+
+      <label class="campo">
+        <span class="campo-rotulo">Mercado</span>
+        <input type="text" id="nota-mercado" class="campo-entrada" autocomplete="off"
+               placeholder="Ex.: Assaí, Carrefour, Mercadinho da esquina" maxlength="40" />
+      </label>
 
       <div class="foto-area">
         <div id="nota-previa" class="foto-previa" data-vazia="true">
@@ -204,6 +213,25 @@
                placeholder="R$ 0,00" value="R$ 0,00" />
       </label>
 
+      <div class="dupla">
+        <label class="campo">
+          <span class="campo-rotulo">Desconto</span>
+          <input type="text" id="nota-desconto" class="campo-entrada"
+                 inputmode="numeric" autocomplete="off" placeholder="R$ 0,00" value="R$ 0,00" />
+        </label>
+        <label class="campo">
+          <span class="campo-rotulo">Você pagou</span>
+          <input type="text" id="nota-pago" class="campo-entrada"
+                 inputmode="numeric" autocomplete="off" placeholder="R$ 0,00" value="R$ 0,00" />
+        </label>
+      </div>
+
+      <label class="campo">
+        <span class="campo-rotulo">Quantidade de itens</span>
+        <input type="number" id="nota-qtd" class="campo-entrada" inputmode="numeric"
+               min="0" max="999" autocomplete="off" placeholder="quantos itens o cupom marcou" />
+      </label>
+
       <div id="nota-conferencia" class="conferencia"></div>
     </div>
 
@@ -212,6 +240,38 @@
       <button type="submit" class="botao-principal">Salvar nota</button>
     </div>
   </form>
+</dialog>
+
+<!-- Listas: cada ida ao mercado, com data e mercado, guardadas para consultar depois -->
+<dialog id="listas-dlg" class="folha" aria-label="Minhas listas">
+  <div class="folha-topo">
+    <h2>Minhas listas</h2>
+    <button type="button" id="listas-fechar" class="icone" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="folha-corpo">
+    <form id="form-nova-lista" class="nova-lista">
+      <label class="campo">
+        <span class="campo-rotulo">Mercado</span>
+        <input type="text" id="novo-mercado" class="campo-entrada" autocomplete="off"
+               placeholder="Ex.: Assaí, Carrefour, Mercadinho da esquina" maxlength="40" />
+      </label>
+      <div class="nova-lista-botoes">
+        <button type="button" id="btn-salvar-mercado" class="botao-secundario">
+          Salvar na lista aberta
+        </button>
+        <button type="submit" class="botao-secundario destaque">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Começar lista nova
+        </button>
+      </div>
+    </form>
+
+    <h3 class="resumo-titulo">Compras anteriores</h3>
+    <div id="listas-corpo"></div>
+  </div>
 </dialog>
 
 <!-- Sincronização: a lista guardada no GitHub, para os dois celulares verem o mesmo -->

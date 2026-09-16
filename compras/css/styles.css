@@ -66,19 +66,32 @@ svg {
   border-bottom: 1px solid var(--linha);
 }
 
-.topo-marca { display: flex; align-items: center; gap: 10px; }
-.topo-marca img { border-radius: 9px; display: block; }
-.topo-marca h1 { margin: 0; font-size: 19px; letter-spacing: -.2px; }
+.topo-marca {
+  display: flex; align-items: center; gap: 10px;
+  min-width: 0; flex: 1;
+  border: 0; padding: 4px; margin: 0;
+  background: none; color: inherit; font: inherit; text-align: left;
+  border-radius: 12px; cursor: pointer;
+}
+.topo-marca:hover { background: var(--superficie-2); }
+.topo-marca img { border-radius: 9px; display: block; flex: none; }
+.topo-titulo { display: grid; min-width: 0; line-height: 1.2; }
+.topo-titulo strong {
+  font-size: 17px; letter-spacing: -.2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.topo-titulo small {
+  font-size: 11px; color: var(--texto-fraco);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .topo-acoes { display: flex; gap: 4px; }
 
 /* Com quatro ícones no topo, o título não cabe junto em tela estreita. */
 @media (max-width: 380px) {
-  .topo { padding-left: 10px; padding-right: 10px; }
-  .topo-marca h1 { font-size: 17px; }
-  .topo-acoes .icone { width: 36px; height: 36px; }
-}
-@media (max-width: 339px) {
-  .topo-marca h1 { display: none; }
+  .topo { padding-left: 8px; padding-right: 8px; gap: 4px; }
+  .topo-titulo strong { font-size: 15px; }
+  .topo-acoes .icone { width: 34px; height: 34px; }
+  .topo-acoes svg { width: 20px; height: 20px; }
 }
 
 /* estado da sincronização: um pontinho colorido sobre o ícone de nuvem */
@@ -458,6 +471,49 @@ svg {
 }
 .conferencia-linha.destaque strong { font-size: 18px; }
 .conferencia-recado { margin: 2px 0 0; font-size: 13.5px; color: var(--texto-fraco); }
+
+/* ---------------- minhas listas ---------------- */
+
+.dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.nova-lista { display: grid; gap: 12px; }
+.nova-lista-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.nova-lista-botoes .botao-secundario { justify-content: center; text-align: center; }
+.botao-secundario.destaque {
+  border-color: var(--verde); color: var(--verde); background: transparent;
+}
+@media (max-width: 379px) {
+  .nova-lista-botoes { grid-template-columns: 1fr; }
+  .dupla { grid-template-columns: 1fr; }
+}
+
+.listas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+
+.lista-linha {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px;
+  border: 1px solid var(--linha); border-radius: 14px;
+  background: var(--superficie-2);
+}
+.lista-linha.ativa { border-color: var(--verde); border-width: 2px; }
+
+.lista-abrir {
+  display: grid; gap: 3px; min-width: 0;
+  border: 0; background: none; color: inherit; font: inherit; text-align: left;
+  padding: 12px 4px 12px 14px; cursor: pointer;
+}
+.lista-nome {
+  font-size: 15.5px; font-weight: 700;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lista-detalhe {
+  font-size: 12.5px; color: var(--texto-fraco);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lista-apagar { margin-right: 6px; color: var(--texto-fraco); }
+.lista-apagar:hover { color: var(--perigo); }
+
+.conferencia-bloco.nota { border-left-color: var(--verde); }
+.conferencia-linha.desconto strong { color: var(--verde); }
 
 /* ---------------- tela da sincronização ---------------- */
 

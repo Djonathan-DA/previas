@@ -7,11 +7,13 @@
   'use strict';
 
   var BANCO = 'compras-familia';
-  var VERSAO = 2;
+  var VERSAO = 3;
   var TABELA = 'itens';
-  var TABELA_CFG = 'config';     // guarda a nota fiscal da compra
+  var TABELA_CFG = 'config';       // lista ativa e outras preferências
+  var TABELA_LISTAS = 'listas';    // uma ida ao mercado: data, mercado e a nota fiscal
   var CHAVE_LS = 'compras:itens';
   var CHAVE_LS_CFG = 'compras:config';
+  var CHAVE_LS_LISTAS = 'compras:listas';
 
   /* ---------------- IndexedDB ---------------- */
 
@@ -29,6 +31,9 @@
         }
         if (!bd.objectStoreNames.contains(TABELA_CFG)) {
           bd.createObjectStore(TABELA_CFG, { keyPath: 'chave' });
+        }
+        if (!bd.objectStoreNames.contains(TABELA_LISTAS)) {
+          bd.createObjectStore(TABELA_LISTAS, { keyPath: 'id' });
         }
       };
       req.onsuccess = function () { resolve(req.result); };
@@ -72,6 +77,12 @@
       return transacao('readwrite', function (t) {
         return valor === null ? t.delete(chave) : t.put({ chave: chave, valor: valor });
       }, TABELA_CFG);
+    },
+    listarListas: function () {
+      return transacao('readonly', function (t) { return t.getAll(); }, TABELA_LISTAS);
+    },
+    gravarLista: function (lista) {
+      return transacao('readwrite', function (t) { return t.put(lista); }, TABELA_LISTAS);
     }
   };
 
@@ -123,6 +134,23 @@
       if (valor === null) delete tudo[chave]; else tudo[chave] = valor;
       global.localStorage.setItem(CHAVE_LS_CFG, JSON.stringify(tudo));
       return Promise.resolve();
+    },
+    listarListas: function () {
+      try {
+        return Promise.resolve(JSON.parse(global.localStorage.getItem(CHAVE_LS_LISTAS) || '[]'));
+      } catch (e) {
+        return Promise.resolve([]);
+      }
+    },
+    gravarLista: function (lista) {
+      var todas = [];
+      try {
+        todas = JSON.parse(global.localStorage.getItem(CHAVE_LS_LISTAS) || '[]');
+      } catch (e) { /* começa do zero */ }
+      var i = todas.findIndex(function (x) { return x.id === lista.id; });
+      if (i >= 0) todas[i] = lista; else todas.push(lista);
+      global.localStorage.setItem(CHAVE_LS_LISTAS, JSON.stringify(todas));
+      return Promise.resolve();
     }
   };
 
@@ -168,15 +196,32 @@
       return backend().then(function (b) { return b.limpar(); });
     },
 
-    // Nota fiscal da compra: { foto, totalCent, quando }
-    lerNota: function () {
+    // Nota fiscal antiga, de antes das listas — lida só para a migração.
+    lerNotaAntiga: function () {
       return backend().then(function (b) { return b.lerCfg('nota'); });
     },
-    gravarNota: function (nota) {
+    apagarNotaAntiga: function () {
+      return backend().then(function (b) { return b.gravarCfg('nota', null); });
+    },
+
+    lerCfg: function (chave) {
+      return backend().then(function (b) { return b.lerCfg(chave); });
+    },
+    gravarCfg: function (chave, valor) {
+      return backend().then(function (b) { return b.gravarCfg(chave, valor); });
+    },
+
+    /* Listas = cada ida ao mercado: { id, mercado, criadoEm, atualizadoEm, apagado, nota }.
+       A nota fiscal mora dentro da lista, por isso passa pelo mesmo cuidado com a foto. */
+    listarListas: function () {
+      return backend().then(function (b) { return b.listarListas(); });
+    },
+    gravarLista: function (lista) {
       return backend().then(function (b) {
-        if (nota === null) return b.gravarCfg('nota', null);
-        return prepararFoto(nota, b).then(function (pronta) {
-          return b.gravarCfg('nota', pronta);
+        if (!lista.nota) return b.gravarLista(lista);
+        return prepararFoto(lista.nota, b).then(function (nota) {
+          var copia = Object.assign({}, lista, { nota: nota });
+          return b.gravarLista(copia);
         });
       });
     }
